@@ -1,0 +1,17 @@
+development:
+  app_id:             ""
+  app_secret:         ""
+  page_id:            ""
+  page_access_token:  ""
+  verify_token:       ""
+  domains:            ""
+  debug_log:          true
+
+production:
+  app_id:             <%= ENV["BOBOT_APP_ID"] %>
+  app_secret:         <%= ENV["BOBOT_APP_SECRET"] %>
+  page_id:            <%= ENV["BOBOT_PAGE_ID"] %>
+  page_access_token:  <%= ENV["BOBOT_PAGE_ACCESS_TOKEN"] %>
+  verify_token:       <%= ENV["BOBOT_VERIFY_TOKEN"] %>
+  domains:            <%= ENV["BOBOT_DOMAINS"] %>
+  debug_log:          false

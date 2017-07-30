@@ -1,0 +1,8 @@
+fr:
+  bobot:
+    config:
+      facebook_locales:
+        - "fr_FR"
+        - "fr_CA"
+      greeting_text: 'Bobot est un robot intelligent.'
+    what_is_a_chatbot: "Un chatbot est un programme qui tente de converser avec une personne durant quelques minutes ou plus en lui donnant l'impression de converser elle-même avec une personne."
