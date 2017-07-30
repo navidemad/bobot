@@ -1,0 +1,18 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: travis
+  password:
+
+development:
+  <<: *default
+  database: bobot_development
+
+test:
+  <<: *default
+  database: bobot_test
+
+production:
+  <<: *default
+  database: bobot_production
