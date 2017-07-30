@@ -25,7 +25,6 @@ before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS bobot_test;'
   - cp spec/travis/database.travis.mysql.yml spec/dummy/config/database.yml
 script:
-  - bundle exec rubocop
   - bundle exec rspec spec/
 bundler_args: --without production --jobs=3 --retry=3 --path=../vendor/bundle
 cache: bundler
