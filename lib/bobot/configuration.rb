@@ -69,20 +69,23 @@ module Bobot
     end
 
     def update_facebook_setup!
-      self.class.subscribe_to_facebook_page!
-      self.class.set_greeting_text!
-      self.class.set_whitelist_domains!
-      self.class.set_get_started_button!
-      self.class.set_persistent_menu!
+      byebug
+      subscribe_to_facebook_page!
+      set_greeting_text!
+      set_whitelist_domains!
+      set_get_started_button!
+      set_persistent_menu!
     end
 
     ## == Subcribe your bot to your page ==
     def subscribe_to_facebook_page!
       raise Bobot::InvalidParameter.new(:page_id)      unless Bobot.page_id.present?
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
-      Bobot::Subscriptions.set(
-        { page_id: Bobot.page_id },
-        { access_token: Bobot.page_access_token },
+      Bobot::Subscription.set(
+        query: {
+          page_id: Bobot.page_id,
+          access_token: Bobot.page_access_token,
+        },
       )
     end
 
@@ -90,9 +93,11 @@ module Bobot
     def unsubscribe_to_facebook_page!
       raise Bobot::InvalidParameter.new(:page_id)      unless Bobot.page_id.present?
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
-      Bobot::Subscriptions.unset(
-        { page_id: Bobot.page_id },
-        { access_token: Bobot.page_access_token },
+      Bobot::Subscription.unset(
+        query: {
+          page_id: Bobot.page_id,
+          access_token: Bobot.page_access_token,
+        },
       )
     end
 
@@ -119,8 +124,8 @@ module Bobot
       end
       raise Bobot::InvalidParameter.new(:greeting_texts) unless greeting_texts.present?
       Bobot::Profile.set(
-        { greeting: greeting_texts },
-        { access_token: Bobot.page_access_token },
+        body: { greeting: greeting_texts },
+        query: { access_token: Bobot.page_access_token },
       )
     end
 
@@ -131,8 +136,8 @@ module Bobot
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
       raise Bobot::InvalidParameter.new(:domains) unless Bobot.domains.present?
       Bobot::Profile.set(
-        { whitelisted_domains: Bobot.domains },
-        { access_token: Bobot.page_access_token },
+        body: { whitelisted_domains: Bobot.domains },
+        query: { access_token: Bobot.page_access_token },
       )
     end
 
@@ -142,8 +147,8 @@ module Bobot
     def set_get_started_button!
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
       Bobot::Profile.set(
-        { get_started: { payload: 'GET_STARTED_BUTTON' } },
-        { access_token: Bobot.page_access_token },
+        body: { get_started: { payload: 'GET_STARTED_BUTTON' } },
+        query: { access_token: Bobot.page_access_token },
       )
     end
 
@@ -177,8 +182,8 @@ module Bobot
       end
       raise Bobot::InvalidParameter.new(:persistent_menus) unless persistent_menus.present?
       Bobot::Profile.set(
-        { persistent_menu: persistent_menus },
-        { access_token: Bobot.page_access_token },
+        body: { persistent_menu: persistent_menus },
+        query: { access_token: Bobot.page_access_token },
       )
     end
   end

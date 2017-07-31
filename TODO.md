@@ -1,9 +1,5 @@
 - RSpec helper to make possible to test easily
 - Workflow got payload and try to call the method called the same in the postbacks.rb
 - Workflow got text check the step of the user and then call the method called the same in the messages.rb
-- Change concatenation string with + by URI.join to prevent leading slash bugs
-- Fix task database activerecord by removing activerecord module from dummy and active mailer and assets too like Api Rails Engine Gem
-- Lot of networks module like Profile Subscriptions Profile can be dry because they have lot of include headers json .. in commons
 - Make MessageButtons as bobot had on his sendApi
 - QuickReplies able to get the text of the reply since the model
-- Why capybara, poltergeist, and database_cleaner are in the Gemfile

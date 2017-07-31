@@ -26,14 +26,19 @@
   <p>
 
   ```ruby
-  Bobot::Commander.deliver({
-    recipient: {
-      id: '45123'
+  Bobot::Commander.deliver(
+    body: {
+      recipient: {
+        id: '45123'
+      },
+      message: {
+        text: 'Human?'
+      }
     },
-    message: {
-      text: 'Human?'
+    query: {
+      access_token: "PAGE_ACCESS_TOKEN_HERE"
     }
-  }, access_token: "PAGE_ACCESS_TOKEN_HERE")
+  )
   ```
 
   </p>

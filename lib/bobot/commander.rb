@@ -13,26 +13,13 @@ module Bobot
       message_echo
     ].freeze
 
-    COMMANDER_URL = 'https://graph.facebook.com/v2.10/me'.freeze
-
-    include Network
-
-    format :json
-
-    base_uri COMMANDER_URL
-
-    headers 'Content-Type' => 'application/json; charset=utf-8'
-    headers 'Accept' => 'application/json'
-
-    read_timeout 300
+    include Bobot::GraphFacebook
 
     class << self
-      def deliver(message, access_token:)
-        response = post '/messages', body: message.to_json, query: {
-          access_token: access_token,
+      def deliver(body:, query:)
+        graph_post '/me/messages', body: body, query: {
+          access_token: query.fetch(:access_token),
         }
-        Bobot::ErrorParser.raise_errors_from(response)
-        response.body
       end
 
       def on(event, &block)
@@ -44,25 +31,23 @@ module Bobot
 
       def receive(payload)
         event = Bobot::Event.parse(payload)
-        name = Bobot::Event::EVENTS.invert[event.class]
-        hooks.fetch(name.to_sym)
-        puts "[PUSH JOB] event #{name}" if Bobot.debug_log
+        hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
+        puts "[ActiveJob] << Bobot::HookJob with event #{event.class}" if Bobot.debug_log
         event.mark_as_seen
         Bobot::HookJob.perform_now(payload)
       rescue KeyError
-        $stderr.puts "Ignoring #{event} (no hook registered)"
+        $stderr.puts "Ignoring #{event.class} (no hook registered)"
       end
 
       def trigger(payload)
         event = Bobot::Event.parse(payload)
-        name = Bobot::Event::EVENTS.invert[event.class]
-        hook = hooks.fetch(name.to_sym)
-        puts "[POP JOB] event #{name}" if Bobot.debug_log
+        hook = hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
+        puts "[ActiveJob] >> Bobot::HookJob related to event #{name.class}" if Bobot.debug_log
         event.show_typing(state: true)
         hook.call(event)
         event.show_typing(state: false)
       rescue KeyError
-        $stderr.puts "Ignoring #{event} (no hook registered)"
+        $stderr.puts "Ignoring #{event.class} (no hook registered)"
       end
 
       def hooks

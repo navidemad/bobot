@@ -28,11 +28,3 @@ module Dummy
     config.api_only = true
   end
 end
-
-if defined?(Rails::Server)
-  config.after_initialize do
-    # Auto-load bobot files
-    config.paths.add File.join('app', 'bobot'), glob: File.join('**', '*.rb')
-    config.autoload_paths += Dir[Rails.root.join('app', 'bobot', '*')]
-  end
-end

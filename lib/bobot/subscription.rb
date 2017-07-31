@@ -1,16 +1,16 @@
 module Bobot
-  module Profile
+  module Subscription
     include Bobot::GraphFacebook
 
-    def set(body:, query:)
-      graph_post '/me/messenger_profile', body: body, query: {
+    def set(query: {})
+      graph_post "/#{query.fetch(:page_id)}/subscribed_apps", query: {
         access_token: query.fetch(:access_token),
       }
     end
     module_function :set
 
-    def unset(body:, query:)
-      graph_delete '/me/messenger_profile', body: body, query: {
+    def unset(query: {})
+      graph_delete "/#{query.fetch(:page_id)}/subscribed_apps", query: {
         access_token: query.fetch(:access_token),
       }
     end

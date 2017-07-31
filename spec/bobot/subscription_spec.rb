@@ -1,38 +1,33 @@
 require 'rails_helper'
 require 'helpers/graph_api_helpers'
 
-RSpec.describe Bobot::Profile do
+RSpec.describe Bobot::Subscription do
   let(:access_token) { 'access token' }
+  let(:page_id) { 'page-id' }
 
-  let(:messenger_profile_url) do
+  let(:subscription_url) do
     File.join(
       described_class::GRAPH_FB_URL,
       described_class::GRAPH_FB_VERSION,
-      '/me/messenger_profile'
+      "/#{page_id}",
+      '/subscribed_apps',
     )
   end
 
   before do
     Bobot.page_access_token = access_token
+    Bobot.page_id = page_id
   end
 
   describe '.set' do
     context 'with a successful response' do
       before do
-        stub_request(:post, messenger_profile_url)
-          .with(
-            query: {
-              access_token: access_token
-            },
-            body: ActiveSupport::JSON.encode(
-              get_started: {
-                payload: 'GET_STARTED_PAYLOAD'
-              }
-            )
-          )
+        puts subscription_url
+        stub_request(:post, subscription_url)
+          .with(query: { access_token: access_token})
           .to_return(
             body: ActiveSupport::JSON.encode(
-              result: 'Successfully added Get Started button'
+              success: true,
             ),
             status: :ok,
             headers: default_graph_api_response_headers
@@ -42,16 +37,12 @@ RSpec.describe Bobot::Profile do
       it 'returns hash' do
         expect(
           subject.set(
-            body: {
-              get_started: {
-                payload: 'GET_STARTED_PAYLOAD'
-              }
-            },
             query: {
-              access_token: access_token
+              page_id: page_id,
+              access_token: access_token,
             }
           )
-        ).to include('result' => 'Successfully added Get Started button')
+        ).to include('success' => true)
       end
     end
 
@@ -59,17 +50,17 @@ RSpec.describe Bobot::Profile do
       let(:error_message) { 'Invalid OAuth access token.' }
 
       before do
-        stub_request(:post, messenger_profile_url)
+        stub_request(:post, subscription_url)
           .with(query: { access_token: access_token })
           .to_return(
-            body: ActiveSupport::JSON.encode(
+            body: {
               'error' => {
                 'message' => error_message,
                 'type' => 'OAuthException',
                 'code' => 190,
                 'fbtrace_id' => 'Hlssg2aiVlN'
               }
-            ),
+            }.to_json,
             status: :ok,
             headers: default_graph_api_response_headers
           )
@@ -78,13 +69,9 @@ RSpec.describe Bobot::Profile do
       it 'raises an error' do
         expect do
           subject.set(
-            body: {
-              get_started: {
-                payload: 'GET_STARTED_PAYLOAD'
-              }
-            },
             query: {
-              access_token: access_token
+              page_id: page_id,
+              access_token: access_token,
             }
           )
         end.to raise_error(Bobot::AccessTokenError)
@@ -95,20 +82,11 @@ RSpec.describe Bobot::Profile do
   describe '.unset' do
     context 'with a successful response' do
       before do
-        stub_request(:delete, messenger_profile_url)
-          .with(
-            query: {
-              access_token: access_token
-            },
-            body: ActiveSupport::JSON.encode(
-              fields: [
-                'get_started'
-              ]
-            )
-          )
+        stub_request(:delete, subscription_url)
+          .with(query: { access_token: access_token })
           .to_return(
             body: ActiveSupport::JSON.encode(
-              result: 'Successfully deleted Get Started button'
+              success: true,
             ),
             status: :ok,
             headers: default_graph_api_response_headers
@@ -118,16 +96,12 @@ RSpec.describe Bobot::Profile do
       it 'returns hash' do
         expect(
           subject.unset(
-            body: {
-              fields: [
-                'get_started'
-              ]
-            },
             query: {
-              access_token: access_token
+              page_id: page_id,
+              access_token: access_token,
             }
           )
-        ).to include('result' => 'Successfully deleted Get Started button')
+        ).to include('success' => true)
       end
     end
 
@@ -135,17 +109,17 @@ RSpec.describe Bobot::Profile do
       let(:error_message) { 'Invalid OAuth access token.' }
 
       before do
-        stub_request(:delete, messenger_profile_url)
+        stub_request(:delete, subscription_url)
           .with(query: { access_token: access_token })
           .to_return(
-            body: ActiveSupport::JSON.encode(
+            body: {
               'error' => {
                 'message' => error_message,
                 'type' => 'OAuthException',
                 'code' => 190,
                 'fbtrace_id' => 'Hlssg2aiVlN'
               }
-            ),
+            }.to_json,
             status: :ok,
             headers: default_graph_api_response_headers
           )
@@ -154,13 +128,9 @@ RSpec.describe Bobot::Profile do
       it 'raises an error' do
         expect do
           subject.unset(
-            body: {
-              fields: [
-                'get_started'
-              ]
-            },
             query: {
-              access_token: access_token
+              page_id: page_id,
+              access_token: access_token,
             }
           )
         end.to raise_error(Bobot::AccessTokenError)
