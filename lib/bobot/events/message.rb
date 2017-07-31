@@ -60,6 +60,7 @@ module Bobot
 
         @messaging['message']['quick_reply']['payload']
       end
+      alias_method :payload, :quick_reply
 
     private
 

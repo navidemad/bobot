@@ -8,6 +8,12 @@ module Bobot
     end
   end
 
+  class FieldFormat < ::ArgumentError
+    def initialize(description)
+      super("invalid field value with API limits: #{description}")
+    end
+  end
+
   # Forbidden Action exception
   class ActionNotAllowed < Bobot::Error; end
 

@@ -69,7 +69,6 @@ module Bobot
     end
 
     def update_facebook_setup!
-      byebug
       subscribe_to_facebook_page!
       set_greeting_text!
       set_whitelist_domains!

@@ -44,7 +44,7 @@
   </p>
 </details>
 
-##### Messages with images
+##### Messages with image
 
 <details>
   <summary>The human may require visual aid to understand:</summary>
@@ -52,6 +52,45 @@
 
   ```ruby
   message.reply_with_image(image_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.jpg')
+  ```
+
+  </p>
+</details>
+
+##### Messages with audio
+
+<details>
+  <summary>The human may require audio aid to understand:</summary>
+  <p>
+
+  ```ruby
+  message.reply_with_audio(audio_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.mp3')
+  ```
+
+  </p>
+</details>
+
+##### Messages with video
+
+<details>
+  <summary>The human may require video aid to understand:</summary>
+  <p>
+
+  ```ruby
+  message.reply_with_video(video_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.mp4')
+  ```
+
+  </p>
+</details>
+
+##### Messages with file
+
+<details>
+  <summary>The human may require video aid to understand:</summary>
+  <p>
+
+  ```ruby
+  message.reply_with_file(file_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.zip')
   ```
 
   </p>
@@ -65,13 +104,27 @@
 
   ```ruby
   message.reply_with_quick_replies(
-    text: 'Human, who is your favorite bot?',
+    text: 'Human, have you at least 18 years old?',
     quick_replies: [
-      {
-        content_type: 'text',
-        title: 'You are!',
-        payload: 'HARMLESS'
-      }
+      message.message_buttons.quick_reply_text(title: "This one", payload: "OLDER_THAN_18", image_url: nil),
+      message.message_buttons.quick_reply_text(title: "This one", payload: "YOUNGER_THAN_18", image_url: nil),
+    ]
+  )
+  ```
+
+  </p>
+</details>
+
+<details>
+  <summary>The human may ask the user location:</summary>
+  <p>
+
+  ```ruby
+  message.reply_with_quick_replies(
+    text: 'Human, have you at least 18 years old?',
+    quick_replies: [
+      message.message_buttons.quick_reply_location(image_url: nil),
+      message.message_buttons.quick_reply_location(image_url: nil),
     ]
   )
   ```
@@ -87,14 +140,60 @@
 
   ```ruby
   message.reply_with_buttons(
-    payload: {
-      template_type: 'button',
-      text: 'Human, do you like me?',
-      buttons: [
-        { type: 'postback', title: 'Yes', payload: 'HARMLESS' },
-        { type: 'postback', title: 'No', payload: 'WHAT_IS_A_CHATBOT' }
-      ]
-    }
+    title: "Do you like me?"
+    buttons: [
+      message.message_buttons.postback(title: 'Yes', payload: "HARMLESS"),
+      message.message_buttons.postback(title: 'No', payload: "WHAT_IS_A_CHATBOT"),
+    ]
+  )
+  ```
+
+  </p>
+</details>
+
+<details>
+  <summary>When the human has selected an option, you can act on it:</summary>
+  <p>
+
+  ```ruby
+  Bobot::Commander.on :postback do |postback|
+    if postback.payload == 'WHAT_IS_A_CHATBOT'
+      puts "Human #{postback.recipient} marked for extermination"
+    end
+  end
+  ```
+
+  </p>
+</details>
+
+##### Messages with carousel
+
+<details>
+  <summary>The human may select between carousel items:</summary>
+  <p>
+
+  ```ruby
+  message.reply_with_generic(
+    image_aspect_ratio: 'square',
+    elements: [
+      message.message_buttons.generic_element(
+        title: "Go to aventure",
+        subtitle: "You prefer to be dressed with confortable things to move easily",
+        image_url: "https://image.fr/confortable-carousel-item.jpg",
+        default_action_url: message.message_buttons.default_action_url(
+          url: "https://my.app/view?item=42",
+          messenger_extensions: true,
+          webview_height_ratio: "tall",
+          fallback_url: "https://my.app/",
+        ),
+        buttons: [
+          message.message_buttons.postback(title: 'Détente', payload: "DRESS_CONFORTABLE"),
+          message.message_buttons.share_basic,
+          message.message_buttons.url(title: 'see details', url: "https://my.app/view?item=42"),
+          # message.message_buttons.call(title: 'call support', payload: "+33142324511")
+        ]
+      )
+    ]
   )
   ```
 
@@ -117,59 +216,6 @@
 </details>
 
 *See Facebook's [documentation][message-documentation] for all message options.*
-
-##### Typing indicator
-
-<details>
-  <summary>Show the human you are preparing a message for them:</summary>
-  <p>
-
-  ```ruby
-  Bobot::Commander.on :message do |message|
-    message.show_typing(state: true)
-
-    # Do something expensive
-
-    message.reply_with_text(text: 'Hello, human!')
-  end
-  ```
-
-  </p>
-</details>
-
-<details>
-  <summary>Or that you changed your mind:</summary>
-  <p>
-
-  ```ruby
-  Bobot::Commander.on :message do |message|
-    message.show_typing(state: true)
-
-    if # something
-      message.reply_with_text(text: 'Hello, human!')
-    else
-      message.show_typing(state: off)
-    end
-  end
-  ```
-
-  </p>
-</details>
-
-##### Mark as viewed
-
-<details>
-  <summary>You can mark messages as seen to keep the human on their toes:</summary>
-  <p>
-
-  ```ruby
-  Bobot::Commander.on :message do |message|
-    message.mark_as_seen
-  end
-  ```
-
-  </p>
-</details>
 
 ##### Record messages
 
@@ -201,12 +247,7 @@
 
   ```ruby
   Bobot::Commander.on :optin do |optin|
-    optin.sender    # => { 'id' => '1008372609250235' }
-    optin.recipient # => { 'id' => '2015573629214912' }
-    optin.sent_at   # => 2016-04-22 21:30:36 +0200
-    optin.ref       # => 'CONTACT_SKYNET'
-
-    optin.reply_with_text(text: 'Ah, human!')
+    optin.reply_with_text(text: "Ah, human! You came from Send To Messenger plugin with ref: '#{optin.ref}'")
   end
   ```
 
@@ -221,12 +262,6 @@
 
   ```ruby
   Bobot::Commander.on :delivery do |delivery|
-    delivery.ids       # => 'mid.1457764197618:41d102a3e1ae206a38'
-    delivery.sender    # => { 'id' => '1008372609250235' }
-    delivery.recipient # => { 'id' => '2015573629214912' }
-    delivery.at        # => 2016-04-22 21:30:36 +0200
-    delivery.seq       # => 37
-
     puts "Human was online at #{delivery.at}"
   end
   ```
@@ -242,10 +277,7 @@
 
   ```ruby
   Bobot::Commander.on :referral do |referral|
-    referral.sender    # => { 'id' => '1008372609250235' }
-    referral.recipient # => { 'id' => '2015573629214912' }
-    referral.sent_at   # => 2016-04-22 21:30:36 +0200
-    referral.ref       # => 'MYPARAM'
+    optin.reply_with_text(text: "Ah, human! You came from m.me link with ref: '#{referral.ref}'")
   end
   ```
 
