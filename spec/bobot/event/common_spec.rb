@@ -65,8 +65,8 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
-          payload_template: { sender_action: 'typing_on' },
           access_token: access_token,
+          payload_template: { sender_action: 'typing_on' },
         )
       subject.show_typing(state: true)
     end
@@ -74,8 +74,8 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
-          payload_template: { sender_action: 'typing_off' },
           access_token: access_token,
+          payload_template: { sender_action: 'typing_off' },
         )
       subject.show_typing(state: false)
     end
@@ -86,8 +86,8 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
-          payload_template: { sender_action: 'mark_seen' },
           access_token: access_token,
+          payload_template: { sender_action: 'mark_seen' },
         )
       subject.mark_as_seen
     end
@@ -98,12 +98,12 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               text: 'Hello, human'
             }
           },
-          access_token: access_token,
         )
       subject.reply_with_text(text: 'Hello, human')
     end
@@ -114,6 +114,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               attachment: {
@@ -135,6 +136,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               attachment: {
@@ -155,6 +157,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               attachment: {
@@ -175,6 +178,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               attachment: {
@@ -195,6 +199,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               text: 'Pick a color:',
@@ -235,6 +240,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               text: 'Where are you',
@@ -261,6 +267,7 @@ RSpec.describe Bobot::Dummy do
       expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
           sender: subject.sender,
+          access_token: access_token,
           payload_template: {
             message: {
               attachment: {

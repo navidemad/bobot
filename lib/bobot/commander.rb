@@ -36,7 +36,7 @@ module Bobot
         event.mark_as_seen
         Bobot::CommanderJob.send(
           (Bobot.async ? :perform_later : :perform_now),
-          payload: payload
+          payload: payload,
         )
       rescue KeyError
         $stderr.puts "Ignoring #{event.class} (no hook registered)"

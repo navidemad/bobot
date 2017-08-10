@@ -10,6 +10,7 @@ RSpec.describe Bobot do
         config.verify_token = '4'
         config.page_id = '5'
         config.debug_log = true
+        config.async = true
       end
       expect(Bobot.app_id).to eql('1')
       expect(Bobot.app_secret).to eql('2')
