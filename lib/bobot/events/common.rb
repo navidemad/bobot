@@ -35,13 +35,17 @@ module Bobot
 
       def deliver(payload_template:)
         raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
+        payload_template.merge!(
+          sender: sender,
+          access_token: access_token,
+        )
         job = Bobot::CommanderJob
         if Bobot.async
           job = job.set(wait: @delay_deliver[:wait]) if @delay_deliver[:wait] > 0
           job = job.set(wait: @delay_deliver[:wait_until]) if @delay_deliver[:wait_until].present?
-          job.perform_later(sender: sender, access_token: access_token, payload_template: payload_template)
+          job.perform_later(payload: payload_template)
         else
-          job.perform_now(sender: sender, access_token: access_token, payload_template: payload_template)
+          job.perform_now(payload: payload_template)
         end
       end
 

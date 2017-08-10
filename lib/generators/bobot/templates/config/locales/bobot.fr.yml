@@ -6,7 +6,7 @@ fr:
         - "fr_CA"
       greeting_text: 'Bobot est un robot intelligent.'
       get_started:
-        payload: 'GET_STARTED_BUTTON'
+        payload: 'get_started'
       persistent_menu:
         composer_input_disabled: false
         call_to_actions:

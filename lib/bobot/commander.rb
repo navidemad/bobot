@@ -34,10 +34,12 @@ module Bobot
         hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
         puts "[ActiveJob] << Bobot::HookJob with event #{event.class}" if Bobot.debug_log
         event.mark_as_seen
-        Bobot::CommanderJob.send(
-          (Bobot.async ? :perform_later : :perform_now),
-          payload: payload,
-        )
+        job = Bobot::CommanderJob
+        if Bobot.async
+          job.perform_later(payload: payload)
+        else
+          job.perform_now(payload: payload)
+        end
       rescue KeyError
         $stderr.puts "Ignoring #{event.class} (no hook registered)"
       end
