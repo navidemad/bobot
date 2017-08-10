@@ -36,7 +36,7 @@ module Bobot
       #
       # Returns nil if no errors were found, otherwises raises appropriately
       def raise_errors_from(response)
-        return false unless response.key? 'error'
+        return false unless response.key?('error')
 
         error = response['error']
 

@@ -6,6 +6,7 @@ Bobot.configure do |config|
   config.verify_token      = Rails.application.config_for(:bobot)['verify_token']
   config.domains           = Rails.application.config_for(:bobot)['domains'].split(',').map(&:strip)
   config.debug_log         = Rails.application.config_for(:bobot)['debug_log']
+  config.async             = Rails.application.config_for(:bobot)['async']
 end
 
 unless Rails.env.production?

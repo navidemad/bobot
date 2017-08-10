@@ -17,6 +17,7 @@ RSpec.describe Bobot do
       expect(Bobot.verify_token).to eql('4')
       expect(Bobot.page_id).to eql('5')
       expect(Bobot.debug_log).to eql(true)
+      expect(Bobot.async).to eql(true)
     end
   end
 end

@@ -62,28 +62,20 @@ RSpec.describe Bobot::Dummy do
 
   describe '.show_typing' do
     it 'sends a typing on indicator to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
-            sender_action: 'typing_on'
-          },
-          query: {
-            access_token: access_token
-          }
+          sender: subject.sender,
+          payload_template: { sender_action: 'typing_on' },
+          access_token: access_token,
         )
       subject.show_typing(state: true)
     end
     it 'sends a typing on indicator to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
-            sender_action: 'typing_off'
-          },
-          query: {
-            access_token: access_token
-          }
+          sender: subject.sender,
+          payload_template: { sender_action: 'typing_off' },
+          access_token: access_token,
         )
       subject.show_typing(state: false)
     end
@@ -91,15 +83,11 @@ RSpec.describe Bobot::Dummy do
 
   describe '.mark_as_seen' do
     it 'sends a typing off indicator to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
-            sender_action: 'mark_seen'
-          },
-          query: {
-            access_token: access_token
-          }
+          sender: subject.sender,
+          payload_template: { sender_action: 'mark_seen' },
+          access_token: access_token,
         )
       subject.mark_as_seen
     end
@@ -107,17 +95,15 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_text' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               text: 'Hello, human'
             }
           },
-          query: {
-            access_token: access_token
-          }
+          access_token: access_token,
         )
       subject.reply_with_text(text: 'Hello, human')
     end
@@ -125,10 +111,10 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_image' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               attachment: {
                 type: 'image',
@@ -139,89 +125,77 @@ RSpec.describe Bobot::Dummy do
               },
             },
           },
-          query: {
-            access_token: access_token
-          }
         )
-      subject.reply_with_image(image_url: 'https://www.foo.bar/image.jpg')
+      subject.reply_with_image(url: 'https://www.foo.bar/image.jpg')
     end
   end
 
   describe '.reply_with_audio' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               attachment: {
                 type: 'audio',
                 payload: {
                   url: 'https://www.foo.bar/audio.mp3'
                 }
-              }
-            }
+              },
+            },
           },
-          query: {
-            access_token: access_token
-          }
         )
-      subject.reply_with_audio(audio_url: 'https://www.foo.bar/audio.mp3')
+      subject.reply_with_audio(url: 'https://www.foo.bar/audio.mp3')
     end
   end
 
   describe '.reply_with_video' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               attachment: {
                 type: 'video',
                 payload: {
                   url: 'https://www.foo.bar/video.mp4'
                 }
-              }
-            }
+              },
+            },
           },
-          query: {
-            access_token: access_token
-          }
         )
-      subject.reply_with_video(video_url: 'https://www.foo.bar/video.mp4')
+      subject.reply_with_video(url: 'https://www.foo.bar/video.mp4')
     end
   end
 
   describe '.reply_with_file' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               attachment: {
                 type: 'file',
                 payload: {
                   url: 'https://www.foo.bar/file.zip'
                 }
-              }
-            }
+              },
+            },
           },
-          query: {
-            access_token: access_token
-          }
         )
-      subject.reply_with_file(file_url: 'https://www.foo.bar/file.zip')
+      subject.reply_with_file(url: 'https://www.foo.bar/file.zip')
     end
   end
 
-  describe '.quick_replies' do
+  describe '.reply_with_quick_replies' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               text: 'Pick a color:',
               quick_replies: [
@@ -237,11 +211,8 @@ RSpec.describe Bobot::Dummy do
                   payload: 'PICKED_GREEN_COLOR'
                 }
               ]
-            }
+            },
           },
-          query: {
-            access_token: access_token
-          }
         )
       subject.reply_with_quick_replies(
         text: 'Pick a color:',
@@ -260,14 +231,37 @@ RSpec.describe Bobot::Dummy do
         ]
       )
     end
+    it 'asks the location to the sender' do
+      expect(Bobot::CommanderJob).to receive(:perform_now)
+        .with(
+          sender: subject.sender,
+          payload_template: {
+            message: {
+              text: 'Where are you',
+              quick_replies: [
+                {
+                  content_type: 'location',
+                  image_url: 'https://foo.bar/gps.png',
+                }
+              ]
+            },
+          },
+        )
+        subject.reply_with_quick_replies(
+          text: 'Where are you',
+          quick_replies: [
+            Bobot::Buttons.quick_reply_location(image_url: 'https://foo.bar/gps.png')
+          ]
+        )
+    end
   end
 
   describe '.reply_with_buttons' do
     it 'replies to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
+      expect(Bobot::CommanderJob).to receive(:perform_now)
         .with(
-          body: {
-            recipient: subject.sender,
+          sender: subject.sender,
+          payload_template: {
             message: {
               attachment: {
                 type: 'template',
@@ -280,45 +274,16 @@ RSpec.describe Bobot::Dummy do
                   ]
                 }
               }
-            }
+            },
           },
-          query: {
-            access_token: access_token
-          }
         )
       subject.reply_with_buttons(
-        payload: {
-          template_type: 'button',
-          text: 'Human, do you like me?',
-          buttons: [
-            { type: 'postback', title: 'Yes', payload: 'HARMLESS' },
-            { type: 'postback', title: 'No', payload: 'WHAT_IS_A_CHATBOT' }
-          ]
-        }
+        text: 'Human, do you like me?',
+        buttons: [
+          { type: 'postback', title: 'Yes', payload: 'HARMLESS' },
+          { type: 'postback', title: 'No', payload: 'WHAT_IS_A_CHATBOT' }
+        ]
       )
-    end
-  end
-
-  describe '.ask_for_location' do
-    it 'asks the location to the sender' do
-      expect(Bobot::Commander).to receive(:deliver)
-        .with(
-          body: {
-            recipient: subject.sender,
-            message: {
-              text: 'Where are you',
-              quick_replies: [
-                {
-                  content_type: 'location'
-                }
-              ]
-            }
-          },
-          query: {
-            access_token: access_token
-          }
-        )
-      subject.ask_for_location(text: 'Where are you')
     end
   end
 end

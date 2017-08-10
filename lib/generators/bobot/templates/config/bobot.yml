@@ -1,3 +1,7 @@
+shared:
+  debug_log:          true
+  async:              false
+
 development:
   app_id:             ""
   app_secret:         ""
@@ -5,7 +9,6 @@ development:
   page_access_token:  ""
   verify_token:       ""
   domains:            ""
-  debug_log:          true
 
 test:
   app_id:             ""
@@ -14,7 +17,6 @@ test:
   page_access_token:  ""
   verify_token:       ""
   domains:            ""
-  debug_log:          false
 
 production:
   app_id:             <%= ENV["BOBOT_APP_ID"] %>
@@ -23,4 +25,3 @@ production:
   page_access_token:  <%= ENV["BOBOT_PAGE_ACCESS_TOKEN"] %>
   verify_token:       <%= ENV["BOBOT_VERIFY_TOKEN"] %>
   domains:            <%= ENV["BOBOT_DOMAINS"] %>
-  debug_log:          false

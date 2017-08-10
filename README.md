@@ -35,12 +35,12 @@ You can run in a Rails console:
 `Bobot.update_facebook_setup!`
 
 Or one by one in a Rails console:
-`Bobot.subscribe_to_facebook_page!`
-`Bobot.unsubscribe_to_facebook_page!`
-`Bobot.set_greeting_text!`
-`Bobot.set_whitelist_domains!`
-`Bobot.set_get_started_button!`
-`Bobot.set_persistent_menu!`
+- `Bobot.subscribe_to_facebook_page!`
+- `Bobot.unsubscribe_to_facebook_page!`
+- `Bobot.set_greeting_text!`
+- `Bobot.set_whitelist_domains!`
+- `Bobot.set_get_started_button!`
+- `Bobot.set_persistent_menu!`
 
 Greeting Text and Persistent Menus are translated by I18n.
 You have to define into your `config/application.rb` your available_locales as I18n defined them.

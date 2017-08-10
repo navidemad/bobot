@@ -51,7 +51,7 @@
   <p>
 
   ```ruby
-  message.reply_with_image(image_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.jpg')
+  message.reply_with_image(url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.jpg')
   ```
 
   </p>
@@ -64,7 +64,7 @@
   <p>
 
   ```ruby
-  message.reply_with_audio(audio_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.mp3')
+  message.reply_with_audio(url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.mp3')
   ```
 
   </p>
@@ -77,7 +77,7 @@
   <p>
 
   ```ruby
-  message.reply_with_video(video_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.mp4')
+  message.reply_with_video(url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.mp4')
   ```
 
   </p>
@@ -90,7 +90,7 @@
   <p>
 
   ```ruby
-  message.reply_with_file(file_url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.zip')
+  message.reply_with_file(url: 'http://sky.net/visual-aids-for-stupid-organisms/pig.zip')
   ```
 
   </p>
@@ -106,8 +106,8 @@
   message.reply_with_quick_replies(
     text: 'Human, have you at least 18 years old?',
     quick_replies: [
-      message.message_buttons.quick_reply_text(title: "This one", payload: "OLDER_THAN_18", image_url: nil),
-      message.message_buttons.quick_reply_text(title: "This one", payload: "YOUNGER_THAN_18", image_url: nil),
+      Bobot::Buttons::quick_reply_text(text: "This one", payload: "OLDER_THAN_18", image_url: nil),
+      Bobot::Buttons::quick_reply_text(text: "This one", payload: "YOUNGER_THAN_18", image_url: nil),
     ]
   )
   ```
@@ -123,8 +123,7 @@
   message.reply_with_quick_replies(
     text: 'Human, have you at least 18 years old?',
     quick_replies: [
-      message.message_buttons.quick_reply_location(image_url: nil),
-      message.message_buttons.quick_reply_location(image_url: nil),
+      Bobot::Buttons::quick_reply_location(image_url: nil)
     ]
   )
   ```
@@ -142,8 +141,8 @@
   message.reply_with_buttons(
     title: "Do you like me?"
     buttons: [
-      message.message_buttons.postback(title: 'Yes', payload: "HARMLESS"),
-      message.message_buttons.postback(title: 'No', payload: "WHAT_IS_A_CHATBOT"),
+      Bobot::Buttons::postback(text: 'Yes', payload: "HARMLESS"),
+      Bobot::Buttons::postback(text: 'No', payload: "WHAT_IS_A_CHATBOT"),
     ]
   )
   ```
@@ -176,26 +175,28 @@
   message.reply_with_generic(
     image_aspect_ratio: 'square',
     elements: [
-      message.message_buttons.generic_element(
+      Bobot::Buttons::generic_element(
         title: "Go to aventure",
         subtitle: "You prefer to be dressed with confortable things to move easily",
         image_url: "https://image.fr/confortable-carousel-item.jpg",
-        default_action_url: message.message_buttons.default_action_url(
+        default_action_url: Bobot::Buttons::default_action_url(
           url: "https://my.app/view?item=42",
           messenger_extensions: true,
           webview_height_ratio: "tall",
           fallback_url: "https://my.app/",
         ),
         buttons: [
-          message.message_buttons.postback(title: 'Détente', payload: "DRESS_CONFORTABLE"),
-          message.message_buttons.share_basic,
-          message.message_buttons.url(title: 'see details', url: "https://my.app/view?item=42"),
-          # message.message_buttons.call(title: 'call support', payload: "+33142324511")
+          Bobot::Buttons::postback(title: 'Détente', payload: "DRESS_CONFORTABLE"),
+          Bobot::Buttons::share_basic,
+          Bobot::Buttons::url(title: 'see details', url: "https://my.app/view?item=42"),
+          # Bobot::Buttons::call(title: 'call support', payload: "+33142324511")
         ]
       )
     ]
   )
   ```
+
+  It is also aliased to .reply_with_carousel
 
   </p>
 </details>

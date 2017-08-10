@@ -8,8 +8,11 @@ module Bobot
 
     def notify
       if check_integrity?
-        trigger(parsed_body)
-        head :no_content
+        begin
+          trigger(parsed_body)
+        ensure
+          respond_with status: :ok
+        end
       else
         respond_with status: :forbidden
       end

@@ -9,14 +9,14 @@ module Bobot
     extend Generators::Utils::ClassMethods
     source_root File.expand_path('../templates', __FILE__)
 
-    argument :_namespace, type: :string, required: false, desc: 'Bobot url namespace'
+    argument :_namespace, type: :string, required: false, desc: 'Bot url namespace'
     desc 'Bobot install'
 
     def install
-      namespace = ask_for('Where do you want to mount bobot?', 'bobot', _namespace)
+      namespace = ask_for('Where do you want to mount bobot?', 'bot', _namespace)
       create_file 'config/routes.rb'
-      gsub_file 'config/routes.rb', %r{mount Bobot::Engine => \'\/.+\'(, as: \'bobot\')?}, ''
-      route("mount Bobot::Engine => '/#{namespace}', as: 'bobot'")
+      gsub_file 'config/routes.rb', %r{mount Bobot::Engine => \'\/.+\'(, as: \'bot\')?}, ''
+      route("mount Bobot::Engine => '/#{namespace}', as: 'bot'")
       template 'config/initializers/bobot.rb', 'config/initializers/bobot.rb'
       template 'app/bobot/workflow.rb', 'app/bobot/workflow.rb'
       copy_file 'config/bobot.yml', 'config/bobot.yml'

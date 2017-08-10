@@ -3,9 +3,11 @@ module Bobot
     # Common attributes for all incoming data from Facebook.
     module Common
       attr_reader :messaging
+      attr_accessor :delay_options
 
       def initialize(messaging)
         @messaging = messaging
+        @delay_options = { wait: 0, wait_until: nil }
       end
 
       def sender
@@ -16,20 +18,35 @@ module Bobot
         @messaging['recipient']
       end
 
+      def delay(wait: 0, wait_until: nil)
+        raise Bobot::FieldFormat.new('wait has to be positive integer.') unless wait.present?
+        if Bobot.async
+          @delay_deliver[:wait] = wait if wait >= 0
+          @delay_deliver[:wait_until] = wait_until if wait_until.present?
+        else
+          warn "delay is ignored since you configured Bobot.async to 'false'"
+        end
+        self
+      end
+
       def sent_at
         Time.zone.at(@messaging['timestamp'] / 1000)
       end
 
+      def deliver(payload_template:)
+        raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
+        job = Bobot::CommanderJob
+        if Bobot.async
+          job = job.set(wait: @delay_deliver[:wait]) if @delay_deliver[:wait] > 0
+          job = job.set(wait: @delay_deliver[:wait_until]) if @delay_deliver[:wait_until].present?
+          job.perform_later(sender: sender, access_token: access_token, payload_template: payload_template)
+        else
+          job.perform_now(sender: sender, access_token: access_token, payload_template: payload_template)
+        end
+      end
+
       def sender_action(sender_action:)
-        Bobot::Commander.deliver(
-          body: {
-            recipient: sender,
-            sender_action: sender_action,
-          },
-          query: {
-            access_token: access_token,
-          },
-        )
+        deliver(payload_template: { sender_action: sender_action })
       end
 
       def show_typing(state:)
@@ -41,18 +58,12 @@ module Bobot
       end
 
       def reply(payload_message:)
-        Bobot::Commander.deliver(
-          body: {
-            recipient: sender,
-            message: payload_message,
-          },
-          query: {
-            access_token: access_token,
-          },
-        )
+        deliver(payload_template: { message: payload_message })
       end
 
       def reply_with_text(text:)
+        raise Bobot::FieldFormat.new('text is required.') unless text.present?
+        raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
         reply(
           payload_message: {
             text: text,
@@ -60,75 +71,54 @@ module Bobot
         )
       end
 
-      def reply_with_image(image_url:)
+      def reply_with_attachment(url:, type:)
+        raise Bobot::FieldFormat.new('url is required.') unless url.present?
+        raise Bobot::FieldFormat.new('type is required.') unless type.present?
+        raise Bobot::FieldFormat.new('type is invalid, only "image, audio, video, file" are permitted.') unless %w[image audio video file].include?(type)
         reply(
           payload_message: {
             attachment: {
-              type: 'image',
+              type: type,
               payload: {
-                url: image_url,
-                is_reusable: true,
-              },
+                url: url,
+              }.tap { |properties| properties.merge!(is_reusable: true) if type == 'image' },
             },
           },
         )
       end
 
-      def reply_with_audio(audio_url:)
-        reply(
-          payload_message: {
-            attachment: {
-              type: 'audio',
-              payload: {
-                url: audio_url,
-              },
-            },
-          },
-        )
+      def reply_with_image(url:)
+        reply_with_attachment(url: url, type: 'image')
       end
 
-      def reply_with_video(video_url:)
-        reply(
-          payload_message: {
-            attachment: {
-              type: 'video',
-              payload: {
-                url: video_url,
-              },
-            },
-          },
-        )
+      def reply_with_audio(url:)
+        reply_with_attachment(url: url, type: 'audio')
       end
 
-      def reply_with_file(file_url:)
-        reply(
-          payload_message: {
-            attachment: {
-              type: 'file',
-              payload: {
-                url: file_url,
-              },
-            },
-          },
-        )
+      def reply_with_video(url:)
+        reply_with_attachment(url: url, type: 'video')
       end
 
-      def reply_with_quick_replies(title:, quick_replies:)
-        raise Bobot::FieldFormat.new('title is required.') unless title.present?
-        raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
+      def reply_with_file(url:)
+        reply_with_attachment(url: url, type: 'file')
+      end
+
+      def reply_with_quick_replies(text:, quick_replies:)
+        raise Bobot::FieldFormat.new('text is required.') unless text.present?
+        raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
         raise Bobot::FieldFormat.new('quick_replies are required.') unless quick_replies.present?
         raise Bobot::FieldFormat.new('quick_replies are limited to 11.') if quick_replies.size > 11
         reply(
           payload_message: {
-            text: title,
-            quick_replies: quick_replies
+            text: text,
+            quick_replies: quick_replies,
           },
         )
       end
 
-      def reply_with_buttons(title:, buttons:)
-        raise Bobot::FieldFormat.new('title is required.') unless title.present?
-        raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
+      def reply_with_buttons(text:, buttons:)
+        raise Bobot::FieldFormat.new('text is required.') unless text.present?
+        raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
         raise Bobot::FieldFormat.new('buttons are required.') unless buttons.present?
         raise Bobot::FieldFormat.new('buttons are limited to 3.') if buttons.size > 3
         reply(
@@ -138,8 +128,8 @@ module Bobot
               payload: {
                 template_type: 'button',
                 text: text,
-                buttons: buttons
-              }
+                buttons: buttons,
+              },
             },
           },
         )
@@ -149,7 +139,7 @@ module Bobot
         raise Bobot::FieldFormat.new('elements are required.') if elements.nil?
         raise Bobot::FieldFormat.new('elements are limited to 10.') if elements.size > 10
         raise Bobot::FieldFormat.new('image_aspect_ratio is required.') if image_aspect_ratio.nil?
-        raise Bobot::FieldFormat.new('image_aspect_ratio is invalid, only "square, horizontal" are permitted.') unless ['square', 'horizontal'].include?(image_aspect_ratio)
+        raise Bobot::FieldFormat.new('image_aspect_ratio is invalid, only "square, horizontal" are permitted.') unless %w[square horizontal].include?(image_aspect_ratio)
         reply(
           payload_message: {
             attachment: {
@@ -163,169 +153,10 @@ module Bobot
           },
         )
       end
+      alias_method :reply_with_carousel, :reply_with_generic
 
       def access_token
         Bobot.page_access_token
-      end
-
-      def message_buttons
-        @buttons ||= self.class::MessageButtons.new
-      end
-
-      class MessageButtons
-        def postback(title:, payload:)
-          raise Bobot::FieldFormat.new('title is required.') unless title.present?
-          raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
-          raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-          unless payload.is_a?(String)
-            begin
-              payload = ActiveSupport::JSON.encode(payload)
-            rescue ::ActiveSupport::JSON.parse_error => e
-              raise Bobot::FieldFormat.new('payload is not string and not a valid to be JSONified.')
-            end
-          end
-          raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.size > 20
-          {
-            type: 'postback',
-            title: title,
-            payload: payload
-          }
-        end
-
-        def generic_element(title:, subtitle: nil, image_url: nil, default_action_url: nil, buttons: nil)
-          raise Bobot::FieldFormat.new('title is required.') unless title.present?
-          raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
-          raise Bobot::FieldFormat.new('subtitle length is limited to 80.') if subtitle.present? && subtitle.size > 80
-          raise Bobot::FieldFormat.new('buttons are limited to 3.') if buttons.present? && buttons.size > 3
-          {
-            title: title,
-          }.tap do |_|
-            _.merge!(image_url: image_url) if image_url.present?
-            _.merge!(subtitle: subtitle) if subtitle.present?
-            _.merge!(default_action_url: default_action_url) if default_action_url.present?
-            _.merge!(buttons: buttons) if buttons.present?
-          end
-        end
-
-        def quick_reply_location(image_url: nil)
-          {
-            content_type: 'location',
-          }.tap do |_|
-            _.merge!(image_url: image_url) if image_url.present?
-          end
-        end
-
-        def quick_reply_text(title:, payload:, image_url: nil)
-          raise Bobot::FieldFormat.new('title is required.') unless title.present?
-          raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
-          raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-          raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.size > 1000
-          {
-            content_type: 'text',
-            title: title,
-            payload: payload,
-          }.tap do |_|
-            _.merge!(image_url: image_url) if image_url.present?
-          end
-        end
-
-        def share_basic(share_contents: nil)
-          {
-            type: 'element_share',
-          }
-        end
-
-        def share_custom(title:, subtitle:, image_url:, web_url:, button_title:, image_aspect_ratio:)
-          raise Bobot::FieldFormat.new('title is required.') unless title.present?
-          raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
-          raise Bobot::FieldFormat.new('subtitle is required.') unless subtitle.present?
-          raise Bobot::FieldFormat.new('subtitle length is limited to 80.') if subtitle.size > 80
-          raise Bobot::FieldFormat.new('button_title is required.') unless button_title.present?
-          raise Bobot::FieldFormat.new('button_title length is limited to 20.') if button_title.size > 20
-          {
-            type: 'element_share',
-            share_contents: {
-              attachment: {
-                type: 'template',
-                payload: {
-                  template_type: 'generic',
-                  image_aspect_ratio: image_aspect_ratio,
-                  elements: [
-                    {
-                      title: title,
-                      subtitle: subtitle,
-                      image_url: image_url,
-                      default_action: {
-                        type: 'web_url',
-                        url: web_url
-                      },
-                      buttons: [
-                        {
-                          type: 'web_url',
-                          url: web_url,
-                          title: button_title
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        end
-
-        def default_action_url(url:, options: {})
-          raise Bobot::FieldFormat.new('url is required.') unless url.present?
-          if options.has_key? :messenger_extensions && options[:messenger_extensions] && !url.include?('https')
-            raise Bobot::FieldFormat.new('must use url HTTPS protocol if messenger_extensions is true.')
-          end
-          if options.has_key? :webview_height_ratio && !['compact', 'tall', 'full'].include?(options[:webview_height_ratio])
-            raise Bobot::FieldFormat.new('invalid webview_height_ratio, only "compact, tall, full" are permitted.')
-          end
-          {
-            type: 'web_url',
-            url: url,
-          }.tap do |_|
-            _.merge!(webview_height_ratio: options[:webview_height_ratio] if options.has_key? :webview_height_ratio
-            _.merge!(messenger_extensions: options[:messenger_extensions] if options.has_key? :messenger_extensions
-            _.merge!(fallback_url: options[:fallback_url] if options.has_key? :fallback_url
-            _.merge!(webview_share_button: options[:webview_share_button] if options.has_key? :webview_share_button
-          end
-        end
-
-        def url(title:, url:, options: {})
-          raise Bobot::FieldFormat.new('title is required.') unless title.present?
-          raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
-          raise Bobot::FieldFormat.new('url is required.') unless url.present?
-          if options.has_key? :messenger_extensions && options[:messenger_extensions] && !url.include?('https')
-            raise Bobot::FieldFormat.new('must use url HTTPS protocol if messenger_extensions is true.')
-          end
-          if options.has_key? :webview_height_ratio && !['compact', 'tall', 'full'].include?(options[:webview_height_ratio])
-            raise Bobot::FieldFormat.new('invalid webview_height_ratio, only "compact, tall, full" are permitted.')
-          end
-          {
-            type: 'web_url',
-            url: url,
-            title: title,
-          }.tap do |_|
-            _.merge!(webview_height_ratio: options[:webview_height_ratio] if options.has_key? :webview_height_ratio
-            _.merge!(messenger_extensions: options[:messenger_extensions] if options.has_key? :messenger_extensions
-            _.merge!(fallback_url: options[:fallback_url] if options.has_key? :fallback_url
-            _.merge!(webview_share_button: options[:webview_share_button] if options.has_key? :webview_share_button
-          end
-        end
-
-        def call(title:, payload:)
-          raise Bobot::FieldFormat.new('title is required.') unless title.present?
-          raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
-          raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-          raise Bobot::FieldFormat.new('payload has to start with a "+"') unless payload.starts_with?('+')
-          {
-            type: 'phone_number',
-            title: title,
-            payload: payload
-          }
-        end
       end
     end
   end

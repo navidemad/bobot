@@ -1,8 +1,8 @@
 module Bobot
-  class HookJob < ApplicationJob
+  class CommanderJob < ApplicationJob
     queue_as :default
 
-    def perform(payload)
+    def perform(payload:)
       Bobot::Commander.trigger(payload)
     end
   end

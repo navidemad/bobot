@@ -3,7 +3,7 @@ require 'generators/bobot/install_generator'
 
 RSpec.describe Bobot::InstallGenerator, type: :generator do
   destination File.expand_path('../../dummy/tmp/generator', __FILE__)
-  arguments ['bobot']
+  arguments ['bot']
 
   before do
     prepare_destination
@@ -11,7 +11,7 @@ RSpec.describe Bobot::InstallGenerator, type: :generator do
 
   it 'mounts Bobot as Engine and generates Bobot Initializer' do
     expect_any_instance_of(generator_class).to receive(:route).
-      with('mount Bobot::Engine => \'/bobot\', as: \'bobot\'')
+      with('mount Bobot::Engine => \'/bot\', as: \'bot\'')
     silence_stream(STDOUT) do
       generator.invoke('install')
     end

@@ -12,7 +12,7 @@ module Bobot
 
     def uninstall
       display 'Why you leaving so soon? :('
-      gsub_file 'config/routes.rb', %r{mount Bobot::Engine => \'\/.+\'(, as: \'bobot\')?}, ''
+      gsub_file 'config/routes.rb', %r{mount Bobot::Engine => \'\/.+\'(, as: \'bot\')?}, ''
       remove_file 'config/initializers/bobot.rb'
       remove_file 'app/bobot/workflow.rb'
       remove_file 'config/bobot.yml'

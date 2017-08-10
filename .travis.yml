@@ -1,4 +1,3 @@
-
 language: ruby
 dist: precise
 sudo: false

@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 module Bobot
-  RSpec.describe HookJob, type: :job do
+  RSpec.describe CommanderJob, type: :job do
     subject(:job) { described_class.perform_later(payload) }
 
     let :payload do

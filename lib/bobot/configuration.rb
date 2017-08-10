@@ -10,6 +10,7 @@ module Bobot
       verify_token
       domains
       debug_log
+      async
     ].freeze
 
     # By default, don't set a facebook page id
@@ -32,6 +33,9 @@ module Bobot
 
     # By default, debug log is to false
     DEFAULT_DEBUG_LOG = false
+
+    # By default, async is to false
+    DEFAULT_ASYNC = false
 
     # @private
     attr_accessor(*VALID_CONFIGURATION_KEYS)
@@ -66,6 +70,7 @@ module Bobot
       self.verify_token = DEFAULT_VERIFY_TOKEN
       self.domains = DEFAULT_DOMAINS
       self.debug_log = DEFAULT_DEBUG_LOG
+      self.async = DEFAULT_ASYNC
     end
 
     def update_facebook_setup!

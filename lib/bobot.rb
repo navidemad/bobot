@@ -9,6 +9,7 @@ require 'bobot/configuration'
 require 'bobot/subscription'
 require 'bobot/profile'
 require 'bobot/user'
+require 'bobot/buttons'
 require 'bobot/commander'
 require 'bobot/event'
 
