@@ -3,25 +3,33 @@ shared:
   async:              false
 
 development:
-  app_id:             ""
-  app_secret:         ""
-  page_id:            ""
-  page_access_token:  ""
-  verify_token:       ""
-  domains:            ""
+  app_id:             "123"
+  app_secret:         "456"
+  page_id:            "789"
+  page_access_token:  "abc"
+  verify_token:       "your token"
+  domains:            "whitelisted-domain.com,second-whitelisted-domain.com"
 
 test:
-  app_id:             ""
-  app_secret:         ""
-  page_id:            ""
-  page_access_token:  ""
-  verify_token:       ""
-  domains:            ""
+  app_id:             "123"
+  app_secret:         "456"
+  page_id:            "789"
+  page_access_token:  "abc"
+  verify_token:       "your token"
+  domains:            "whitelisted-domain.com,second-whitelisted-domain.com"
+
+staging:
+  app_id:             <%= ENV["STAGING_BOBOT_APP_ID"] %>
+  app_secret:         <%= ENV["STAGING_BOBOT_APP_SECRET"] %>
+  page_id:            <%= ENV["STAGING_BOBOT_PAGE_ID"] %>
+  page_access_token:  <%= ENV["STAGING_BOBOT_PAGE_ACCESS_TOKEN"] %>
+  verify_token:       <%= ENV["STAGING_BOBOT_VERIFY_TOKEN"] %>
+  domains:            <%= ENV["STAGING_BOBOT_DOMAINS"] %>
 
 production:
-  app_id:             <%= ENV["BOBOT_APP_ID"] %>
-  app_secret:         <%= ENV["BOBOT_APP_SECRET"] %>
-  page_id:            <%= ENV["BOBOT_PAGE_ID"] %>
-  page_access_token:  <%= ENV["BOBOT_PAGE_ACCESS_TOKEN"] %>
-  verify_token:       <%= ENV["BOBOT_VERIFY_TOKEN"] %>
-  domains:            <%= ENV["BOBOT_DOMAINS"] %>
+  app_id:             <%= ENV["PRODUCTION_BOBOT_APP_ID"] %>
+  app_secret:         <%= ENV["PRODUCTION_BOBOT_APP_SECRET"] %>
+  page_id:            <%= ENV["PRODUCTION_BOBOT_PAGE_ID"] %>
+  page_access_token:  <%= ENV["PRODUCTION_BOBOT_PAGE_ACCESS_TOKEN"] %>
+  verify_token:       <%= ENV["PRODUCTION_BOBOT_VERIFY_TOKEN"] %>
+  domains:            <%= ENV["PRODUCTION_BOBOT_DOMAINS"] %>

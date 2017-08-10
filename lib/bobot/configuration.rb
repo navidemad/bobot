@@ -151,7 +151,7 @@ module Bobot
     def set_get_started_button!
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
       Bobot::Profile.set(
-        body: { get_started: { payload: 'GET_STARTED_BUTTON' } },
+        body: { get_started: { payload: I18n.t('bobot.config.get_started.payload') } },
         query: { access_token: Bobot.page_access_token },
       )
     end
