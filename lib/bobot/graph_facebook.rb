@@ -1,4 +1,3 @@
-require 'byebug'
 module Bobot
   module GraphFacebook
     GRAPH_FB_URL = 'https://graph.facebook.com'.freeze
