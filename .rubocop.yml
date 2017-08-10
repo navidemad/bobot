@@ -10,7 +10,7 @@ AllCops:
     - 'log/**/*'
 
 Metrics/AbcSize:
-  Max: 26
+  Enabled: false
 
 Metrics/BlockNesting:
   Max: 3
@@ -23,7 +23,7 @@ Metrics/ClassLength:
   Max: 100
 
 Metrics/CyclomaticComplexity:
-  Max: 6
+  Enabled: false
 
 Metrics/LineLength:
   AllowURI: true
@@ -37,11 +37,11 @@ Metrics/ModuleLength:
   Max: 150
 
 Metrics/ParameterLists:
-  Max: 4
+  Max: 6
   CountKeywordArgs: true
 
 Metrics/PerceivedComplexity:
-  Max: 7
+  Max: 13
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
@@ -57,6 +57,9 @@ Style/CollectionMethods:
     find_all: 'select'
 
 Style/Documentation:
+  Enabled: false
+
+Style/RedundantParentheses:
   Enabled: false
 
 Layout/DotPosition:
