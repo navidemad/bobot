@@ -33,7 +33,9 @@ module Bobot
         properties[:buttons] = buttons if buttons.present?
       end
     end
-    alias_method :carousel_element, :generic_element
+    class <<self
+      alias_method :carousel_element, :generic_element
+    end
 
     def self.quick_reply_location(image_url: nil)
       {
