@@ -21,8 +21,8 @@ module Bobot
       def delay(wait: 0, wait_until: nil)
         raise Bobot::FieldFormat.new('wait has to be positive integer.') unless wait.present?
         if Bobot.async
-          @delay_deliver[:wait] = wait if wait >= 0
-          @delay_deliver[:wait_until] = wait_until if wait_until.present?
+          @delay_options[:wait] = wait if wait >= 0
+          @delay_options[:wait_until] = wait_until if wait_until.present?
         else
           warn "delay is ignored since you configured Bobot.async to 'false'"
         end
@@ -37,8 +37,8 @@ module Bobot
         raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
         job = Bobot::DeliverJob
         if Bobot.async
-          job = job.set(wait: @delay_deliver[:wait]) if @delay_deliver[:wait] > 0
-          job = job.set(wait: @delay_deliver[:wait_until]) if @delay_deliver[:wait_until].present?
+          job = job.set(wait: @delay_options[:wait]) if @delay_options[:wait] > 0
+          job = job.set(wait: @delay_options[:wait_until]) if @delay_options[:wait_until].present?
           job.perform_later(sender: sender, access_token: access_token, payload_template: payload_template)
         else
           job.perform_now(sender: sender, access_token: access_token, payload_template: payload_template)
