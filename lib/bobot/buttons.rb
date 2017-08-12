@@ -11,7 +11,7 @@ module Bobot
           raise Bobot::FieldFormat.new('payload is not string and not a valid to be JSONified.')
         end
       end
-      raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.size > 20
+      raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
       {
         type: 'postback',
         title: title,
