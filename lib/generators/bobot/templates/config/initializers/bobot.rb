@@ -1,12 +1,19 @@
-Bobot.configure do |config|
-  config.app_id            = Rails.application.config_for(:bobot)['app_id']
-  config.app_secret        = Rails.application.config_for(:bobot)['app_secret']
-  config.page_access_token = Rails.application.config_for(:bobot)['page_access_token']
-  config.page_id           = Rails.application.config_for(:bobot)['page_id']
-  config.verify_token      = Rails.application.config_for(:bobot)['verify_token']
-  config.domains           = Rails.application.config_for(:bobot)['domains'].split(',').map(&:strip)
-  config.debug_log         = Rails.application.config_for(:bobot)['debug_log']
-  config.async             = Rails.application.config_for(:bobot)['async']
+bobot_config_path = Rails.root.join('config', 'bobot.yml')
+bobot_config = YAML.load(ERB.new(File.read(bobot_config_path)).result)[Rails.env]
+
+if bobot_config.present?
+  Bobot.configure do |config|
+    config.app_id            = bobot_config['app_id']
+    config.app_secret        = bobot_config['app_secret']
+    config.page_access_token = bobot_config['page_access_token']
+    config.page_id           = bobot_config['page_id']
+    config.verify_token      = bobot_config['verify_token']
+    config.domains           = bobot_config['domains'].split(',').map(&:strip)
+    config.debug_log         = bobot_config['debug_log']
+    config.async             = bobot_config['async']
+  end
+else
+  warn "#{bobot_config_path} not configured yet in #{Rails.env} environment."
 end
 
 unless Rails.env.production?
