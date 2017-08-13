@@ -1,6 +1,6 @@
 module Bobot
   module Buttons
-    def self.encode_paylod(payload:)
+    def self.encode_payload(payload:)
       unless payload.is_a?(String)
         begin
           payload = ActiveSupport::JSON.encode(payload)
@@ -15,7 +15,7 @@ module Bobot
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-      payload = Bobot::Buttons::encode_paylod(payload)
+      payload = Bobot::Buttons::encode_payload(payload: payload)
       raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
       {
         type: 'postback',
@@ -54,7 +54,7 @@ module Bobot
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-      payload = Bobot::Buttons::encode_paylod(payload)
+      payload = Bobot::Buttons::encode_payload(payload: payload)
       raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
       {
         content_type: 'text',
