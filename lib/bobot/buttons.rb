@@ -145,11 +145,13 @@ module Bobot
       end
     end
 
+    REGEX_PHONE_NUMBER = %r{\A(?:\+)(?:\d{1,3}\s*-?)?\(?(?:\d{3})?\)?[- ]?\d{3}[- ]?\d{4}\z}.freeze
     def self.call(title:, payload:)
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-      raise Bobot::FieldFormat.new('payload has to start with a "+"') unless payload.starts_with?('+')
+      raise Bobot::FieldFormat.new('payload has to be only a string') unless payload.kind_of?(String)
+      raise Bobot::FieldFormat.new('payload has to start with a "+" and be a valid phone number') unless REGEX_PHONE_NUMBER =~ payload
       {
         type: 'phone_number',
         title: title,
