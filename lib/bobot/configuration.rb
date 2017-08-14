@@ -54,6 +54,19 @@ module Bobot
       yield self
     end
 
+    # Custom self assignments
+    def domains=(rhs)
+      if rhs.present?
+        if rhs.respond_to?(:to_str)
+          @domains = rhs.split(",").map(&:strip)
+        elsif rhs.is_a?(Array)
+          @domains = rhs
+        else
+          raise Bobot::InvalidParameter.new(:domains, "should be a string or an array")
+        end
+      end
+    end
+
     # Create a hash of options and their values
     def configurations
       VALID_CONFIGURATION_KEYS.inject({}) do |option, key|
