@@ -1,5 +1,5 @@
 bobot_config_path = Rails.root.join("config", "bobot.yml")
-bobot_config = YAML.load(ERB.new(File.read(bobot_config_path)).result)[Rails.env]
+bobot_config = YAML.safe_load(ERB.new(File.read(bobot_config_path)).result)[Rails.env]
 
 if bobot_config.present?
   Bobot.configure do |config|

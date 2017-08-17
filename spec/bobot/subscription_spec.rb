@@ -22,7 +22,6 @@ RSpec.describe Bobot::Subscription do
   describe '.set' do
     context 'with a successful response' do
       before do
-        puts subscription_url
         stub_request(:post, subscription_url)
           .with(query: { access_token: access_token})
           .to_return(

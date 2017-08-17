@@ -15,7 +15,7 @@ module Bobot
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-      payload = Bobot::Buttons::encode_payload(payload: payload)
+      payload = Bobot::Buttons.encode_payload(payload: payload)
       raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
       {
         type: 'postback',
@@ -54,7 +54,7 @@ module Bobot
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-      payload = Bobot::Buttons::encode_payload(payload: payload)
+      payload = Bobot::Buttons.encode_payload(payload: payload)
       raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
       {
         content_type: 'text',
@@ -151,12 +151,12 @@ module Bobot
       end
     end
 
-    REGEX_PHONE_NUMBER = %r{\A(?:\+)(?:\d{1,3}\s*-?)?\(?(?:\d{3})?\)?[- ]?\d{3}[- ]?\d{4}\z}.freeze
+    REGEX_PHONE_NUMBER = /\A(?:\+)(?:\d{1,3}\s*-?)?\(?(?:\d{3})?\)?[- ]?\d{3}[- ]?\d{4}\z/
     def self.call(title:, payload:)
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
-      raise Bobot::FieldFormat.new('payload has to be only a string') unless payload.kind_of?(String)
+      raise Bobot::FieldFormat.new('payload has to be only a string') unless payload.is_a?(String)
       raise Bobot::FieldFormat.new('payload has to start with a "+" and be a valid phone number') unless REGEX_PHONE_NUMBER =~ payload
       {
         type: 'phone_number',

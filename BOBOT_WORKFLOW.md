@@ -106,8 +106,8 @@
   message.reply_with_quick_replies(
     text: 'Human, have you at least 18 years old?',
     quick_replies: [
-      Bobot::Buttons::quick_reply_text(text: "This one", payload: "OLDER_THAN_18", image_url: nil),
-      Bobot::Buttons::quick_reply_text(text: "This one", payload: "YOUNGER_THAN_18", image_url: nil),
+      Bobot::Buttons.quick_reply_text(text: "This one", payload: "OLDER_THAN_18", image_url: nil),
+      Bobot::Buttons.quick_reply_text(text: "This one", payload: "YOUNGER_THAN_18", image_url: nil),
     ]
   )
   ```
@@ -123,7 +123,7 @@
   message.reply_with_quick_replies(
     text: 'Human, have you at least 18 years old?',
     quick_replies: [
-      Bobot::Buttons::quick_reply_location(image_url: nil)
+      Bobot::Buttons.quick_reply_location(image_url: nil)
     ]
   )
   ```
@@ -141,8 +141,8 @@
   message.reply_with_buttons(
     title: "Do you like me?"
     buttons: [
-      Bobot::Buttons::postback(text: 'Yes', payload: "HARMLESS"),
-      Bobot::Buttons::postback(text: 'No', payload: "WHAT_IS_A_CHATBOT"),
+      Bobot::Buttons.postback(text: 'Yes', payload: "HARMLESS"),
+      Bobot::Buttons.postback(text: 'No', payload: "WHAT_IS_A_CHATBOT"),
     ]
   )
   ```
@@ -175,21 +175,21 @@
   message.reply_with_generic(
     image_aspect_ratio: 'square',
     elements: [
-      Bobot::Buttons::generic_element(
+      Bobot::Buttons.generic_element(
         title: "Go to aventure",
         subtitle: "You prefer to be dressed with confortable things to move easily",
         image_url: "https://image.fr/confortable-carousel-item.jpg",
-        default_action_url: Bobot::Buttons::default_action_url(
+        default_action_url: Bobot::Buttons.default_action_url(
           url: "https://my.app/view?item=42",
           messenger_extensions: true,
           webview_height_ratio: "tall",
           fallback_url: "https://my.app/",
         ),
         buttons: [
-          Bobot::Buttons::postback(title: 'Détente', payload: "DRESS_CONFORTABLE"),
-          Bobot::Buttons::share_basic,
-          Bobot::Buttons::url(title: 'see details', url: "https://my.app/view?item=42"),
-          # Bobot::Buttons::call(title: 'call support', payload: "+33142324511")
+          Bobot::Buttons.postback(title: 'Détente', payload: "DRESS_CONFORTABLE"),
+          Bobot::Buttons.share_basic,
+          Bobot::Buttons.url(title: 'see details', url: "https://my.app/view?item=42"),
+          # Bobot::Buttons.call(title: 'call support', payload: "+33142324511")
         ]
       )
     ]

@@ -4,7 +4,7 @@ module Bobot
 
   class InvalidParameter < ::ArgumentError
     def initialize(name, description = "")
-      super("invalid value of parameter #{name}#{description.present? ? ": '#{description}'" : ""}")
+      super("invalid value of parameter #{name}#{description.present? ? ": '#{description}'" : ''}")
     end
   end
 
