@@ -4,10 +4,16 @@ module Bobot
     module Common
       attr_reader :messaging
       attr_accessor :delay_options
+      attr_accessor :payloads_sent
 
       def initialize(messaging)
         @messaging = messaging
         @delay_options = { wait: 0, wait_until: nil }
+        @payloads_sent = []
+      end
+
+      def add_delivery(payload:)
+        @payloads_sent << payload
       end
 
       def sender
@@ -35,6 +41,7 @@ module Bobot
 
       def deliver(payload_template:)
         raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
+        @payloads_sent << payload_template
         job = Bobot::DeliverJob
         if Bobot.async
           job = job.set(wait: @delay_options[:wait]) if @delay_options[:wait] > 0

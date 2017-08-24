@@ -51,6 +51,7 @@ module Bobot
         event.show_typing(state: true)
         hook.call(event)
         event.show_typing(state: false)
+        [event, event.payloads_sent[1..-2]]
       rescue KeyError
         $stderr.puts "Ignoring #{event.class} (no hook registered)"
       end

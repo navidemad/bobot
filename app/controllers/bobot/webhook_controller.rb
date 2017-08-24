@@ -8,11 +8,7 @@ module Bobot
 
     def notify
       if check_integrity?
-        begin
-          trigger(parsed_body)
-        ensure
-          respond_with status: :ok
-        end
+        respond_with body: ActiveSupport::JSON.encode(trigger(parsed_body)), status: :ok
       else
         respond_with status: :forbidden
       end
@@ -34,7 +30,11 @@ module Bobot
     end
 
     def parsed_body
-      @parsed_body ||= JSON.parse(body)
+      @parsed_body ||= begin
+        ActiveSupport::JSON.decode(body)
+      rescue ::ActiveSupport::JSON.parse_error
+        'payload is not string and not a valid to be JSONified.'
+      end
     end
 
     def signature(str, key = nil)
@@ -49,9 +49,13 @@ module Bobot
     end
 
     def trigger(events)
-      events['entry'].each do |entry|
-        if entry['messaging'].present?
-          entry['messaging'].each { |messaging| Bobot::Commander.receive(messaging) }
+      events['entry'].inject([]) do |payloads_sent, entry|
+        entry['messaging'].each do |messaging|
+          begin
+            payloads_sent << Bobot::Commander.receive(messaging)
+          rescue => e
+            payloads_sent << e.to_s
+          end
         end
       end
     end
