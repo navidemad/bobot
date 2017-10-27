@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
   s.rdoc_options              = ['--charset=UTF-8']
   s.test_files                = Dir['spec/**/*']
   s.files                     = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
-  s.add_dependency              'rails', ['>= 5.1', '< 6']
+  s.add_dependency              'rails', ['>= 5', '< 6']
   s.add_dependency              'i18n'
 end
