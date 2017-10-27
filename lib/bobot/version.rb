@@ -2,7 +2,7 @@ module Bobot
   class Version
     MAJOR = 1
     MINOR = 0
-    PATCH = 51
+    PATCH = 52
     PRE = nil
 
     class << self
