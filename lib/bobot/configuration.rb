@@ -138,11 +138,17 @@ module Bobot
           greeting_texts << { locale: locale_long, text: greeting_text }
         end
       end
-      raise Bobot::InvalidParameter.new(:greeting_texts) unless greeting_texts.present?
-      Bobot::Profile.set(
-        body: { greeting: greeting_texts },
-        query: { access_token: Bobot.page_access_token },
-      )
+      if greeting_texts.present?
+        Bobot::Profile.set(
+          body: { greeting: greeting_texts },
+          query: { access_token: Bobot.page_access_token },
+        )
+      else
+        Bobot::Profile.unset(
+          body: { fields: ["greeting"] },
+          query: { access_token: Bobot.page_access_token },
+        )  
+      end
     end
 
     ## == Set bot whitelist domains (only displayed on first time) ==
@@ -151,10 +157,17 @@ module Bobot
     def set_whitelist_domains!
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
       raise Bobot::InvalidParameter.new(:domains) unless Bobot.domains.present?
-      Bobot::Profile.set(
-        body: { whitelisted_domains: Bobot.domains },
-        query: { access_token: Bobot.page_access_token },
-      )
+      if Bobot.domains.present?
+        Bobot::Profile.set(
+          body: { whitelisted_domains: Bobot.domains },
+          query: { access_token: Bobot.page_access_token },
+        )
+      else
+        Bobot::Profile.unset(
+          body: { fields: ["whitelisted_domains"] },
+          query: { access_token: Bobot.page_access_token },
+        )  
+      end
     end
 
     ## == You can define the action to trigger when new humans click on ==
@@ -162,10 +175,17 @@ module Bobot
     ## == messaging_postbacks field when setting up your webhook. ==
     def set_get_started_button!
       raise Bobot::InvalidParameter.new(:access_token) unless Bobot.page_access_token.present?
-      Bobot::Profile.set(
-        body: { get_started: { payload: I18n.t('bobot.config.get_started.payload') } },
-        query: { access_token: Bobot.page_access_token },
-      )
+      if I18n.exists?('bobot.config.get_started.payload')
+        Bobot::Profile.set(
+          body: { get_started: { payload: I18n.t('bobot.config.get_started.payload') } },
+          query: { access_token: Bobot.page_access_token },
+        )
+      else
+        Bobot::Profile.unset(
+          body: { fields: ["persistent_menu", "get_started"] },
+          query: { access_token: Bobot.page_access_token },
+        )
+      end
     end
 
     ## == You can show a persistent menu to humans. ==
@@ -196,11 +216,17 @@ module Bobot
           }
         end
       end
-      raise Bobot::InvalidParameter.new(:persistent_menus) unless persistent_menus.present?
-      Bobot::Profile.set(
-        body: { persistent_menu: persistent_menus },
-        query: { access_token: Bobot.page_access_token },
-      )
+      if persistent_menus.present?
+        Bobot::Profile.set(
+          body: { persistent_menu: persistent_menus },
+          query: { access_token: Bobot.page_access_token },
+        )
+      else
+        Bobot::Profile.unset(
+          body: { fields: ["persistent_menu"] },
+          query: { access_token: Bobot.page_access_token },
+        )  
+      end
     end
   end
 end
