@@ -22,13 +22,14 @@ module Bobot
     end
 
     class Page
-      attr_accessor :slug, :language, :page_id, :page_access_token
+      attr_accessor :slug, :language, :page_id, :page_access_token, :get_started_payload
 
       def initialize(options = {})
         self.slug = options[:slug]
         self.language = options[:language]
         self.page_id = options[:page_id]
         self.page_access_token = options[:page_access_token]
+        self.get_started_payload = options[:get_started_payload]
       end
 
       def update_facebook_setup!
@@ -67,17 +68,22 @@ module Bobot
       def set_greeting_text!
         raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
         greeting_texts = []
-        # Default text
-        greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: I18n.default_locale, default: nil)
-        greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
-        # Each languages
-        I18n.available_locales.each do |locale|
-          greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: locale, default: nil)
-          next unless greeting_text.present?
-          facebook_locales = I18n.t("bobot.#{slug}.config.facebook_locales", locale: locale, default: nil)
-          facebook_locales.to_a.each do |locale_long|
-            greeting_texts << { locale: locale_long, text: greeting_text }
+        if language.nil?
+          # Default text
+          greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: I18n.default_locale, default: nil)
+          greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
+          # Each languages
+          I18n.available_locales.each do |locale|
+            greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: locale, default: nil)
+            next unless greeting_text.present?
+            facebook_locales = I18n.t("bobot.#{slug}.config.facebook_locales", locale: locale, default: nil)
+            facebook_locales.to_a.each do |locale_long|
+              greeting_texts << { locale: locale_long, text: greeting_text }
+            end
           end
+        else
+          greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: language, default: nil)
+          greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
         end
         if greeting_texts.present?
           Bobot::Profile.set(
@@ -127,14 +133,11 @@ module Bobot
       ## == messaging_postbacks field when setting up your webhook. ==
       def set_get_started_button!
         raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
-        if I18n.exists?("bobot.#{slug}.config.get_started.payload")
-          Bobot::Profile.set(
-            body: { get_started: { payload: I18n.t("bobot.#{slug}.config.get_started.payload") } },
-            query: { access_token: page_access_token },
-          )
-        else
-          unset_get_started_button!
-        end
+        raise Bobot::InvalidParameter.new(:access_token) unless get_started_payload.present?
+        Bobot::Profile.set(
+          body: { get_started: { payload: get_started_payload } },
+          query: { access_token: page_access_token },
+        )
       end
 
       def unset_get_started_button!
@@ -152,22 +155,33 @@ module Bobot
         raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
         persistent_menus = []
         # Default text
-        persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: I18n.default_locale, default: nil)
-        if persistent_menu.present?
-          persistent_menus << {
-            locale: 'default',
-            composer_input_disabled: persistent_menu[:composer_input_disabled],
-            call_to_actions: persistent_menu[:call_to_actions],
-          }
-        end
-        # Each languages
-        I18n.available_locales.each do |locale|
-          persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: locale, default: nil)
-          facebook_locales = I18n.t("bobot.#{slug}.config.facebook_locales", locale: locale, default: nil)
-          next unless persistent_menu.present?
-          facebook_locales.to_a.each do |locale_long|
+        if language.nil?
+          persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: I18n.default_locale, default: nil)
+          if persistent_menu.present?
             persistent_menus << {
-              locale: locale_long,
+              locale: 'default',
+              composer_input_disabled: persistent_menu[:composer_input_disabled],
+              call_to_actions: persistent_menu[:call_to_actions],
+            }
+          end
+          # Each languages
+          I18n.available_locales.each do |locale|
+            persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: locale, default: nil)
+            facebook_locales = I18n.t("bobot.#{slug}.config.facebook_locales", locale: locale, default: nil)
+            next unless persistent_menu.present?
+            facebook_locales.to_a.each do |locale_long|
+              persistent_menus << {
+                locale: locale_long,
+                composer_input_disabled: persistent_menu[:composer_input_disabled],
+                call_to_actions: persistent_menu[:call_to_actions],
+              }
+            end
+          end
+        else
+          persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: language, default: nil)
+          if persistent_menu.present?
+            persistent_menus << {
+              locale: 'default',
               composer_input_disabled: persistent_menu[:composer_input_disabled],
               call_to_actions: persistent_menu[:call_to_actions],
             }

@@ -14,6 +14,7 @@ RSpec.describe Bobot do
           language: 'language',
           page_access_token: 'page_access_token',
           page_id: 'page_id',
+          get_started_payload: 'get_started_payload',
         )
       end
       expect(Bobot.config.app_id).to eql('app_id')
@@ -25,6 +26,7 @@ RSpec.describe Bobot do
       expect(Bobot.config.pages[0].language).to eql('language')
       expect(Bobot.config.pages[0].page_access_token).to eql('page_access_token')
       expect(Bobot.config.pages[0].page_id).to eql('page_id')
+      expect(Bobot.config.pages[0].get_started_payload).to eql('get_started_payload')
     end
   end
 end

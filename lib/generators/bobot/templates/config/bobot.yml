@@ -10,6 +10,7 @@ development:
       language: "fr"
       page_id: "789"
       page_access_token: "abc"
+      get_started_payload: "get_started"
 
 test:
   app_id: "123"
@@ -22,6 +23,7 @@ test:
     - slug: "facebook_1"
       page_id: "789"
       page_access_token: "abc"
+      get_started_payload: "get_started"
 
 staging:
   app_id: <%= ENV["STAGING_BOBOT_APP_ID"] %>
@@ -34,6 +36,7 @@ staging:
     - slug: <%= ENV["STAGING_BOBOT_PAGE_SLUG"] %>
       page_id: <%= ENV["STAGING_BOBOT_PAGE_ID"] %>
       page_access_token: <%= ENV["STAGING_BOBOT_PAGE_ACCESS_TOKEN"] %>
+      get_started_payload: <%= ENV["STAGING_BOBOT_GET_STARTED_PAYLOAD"] %>
 
 production:
   app_id: <%= ENV["PRODUCTION_BOBOT_APP_ID"] %>
@@ -46,3 +49,4 @@ production:
     - slug: <%= ENV["PRODUCTION_BOBOT_PAGE_SLUG"] %>
       page_id: <%= ENV["PRODUCTION_BOBOT_PAGE_ID"] %>
       page_access_token: <%= ENV["PRODUCTION_BOBOT_PAGE_ACCESS_TOKEN"] %>
+      get_started_payload: <%= ENV["PRODUCTION_BOBOT_GET_STARTED_PAYLOAD"] %>

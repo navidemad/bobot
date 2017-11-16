@@ -7,8 +7,6 @@ en:
           - "en_UD"
           - "en_GB"
         greeting_text: "Bobot is an intelligent robot."
-        get_started:
-          payload: 'get_started'
         persistent_menu:
           composer_input_disabled: false
           call_to_actions:

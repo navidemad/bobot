@@ -38,7 +38,7 @@ module Bobot
       return_json = trigger(parsed_body)
       render plain: ActiveSupport::JSON.encode(return_json), status: :ok
     rescue BadRequestError => error
-      render plain: error.message, status: :bad_request
+      render plain: error.message, status: :ok
     end
 
   private
