@@ -248,9 +248,16 @@ RSpec.describe Bobot::Event::Message do
       )
     end
   end
+
   describe '.app_id' do
     it 'returns the app_id from which the message was sent' do
       expect(subject.app_id).to eq(payload['message']['app_id'])
+    end
+  end
+  
+  describe '.nlp' do
+    it 'returns the nlp from which the message was sent' do
+      expect(subject.nlp).to eq(payload['message']['nlp'])
     end
   end
 

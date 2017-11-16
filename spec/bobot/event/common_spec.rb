@@ -37,7 +37,9 @@ RSpec.describe Bobot::Dummy do
   let(:access_token) { 'access_token' }
 
   before do
-    Bobot.page_access_token = access_token
+    Bobot.config.pages << Bobot::Configuration::Page.new(
+      page_access_token: access_token,
+    )
   end
 
   subject { described_class.new(payload) }

@@ -13,7 +13,9 @@ RSpec.describe Bobot::Profile do
   end
 
   before do
-    Bobot.page_access_token = access_token
+    Bobot.config.pages << Bobot::Configuration::Page.new(
+      page_access_token: access_token,
+    )
   end
 
   describe '.set' do

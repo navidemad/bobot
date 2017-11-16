@@ -1,6 +1,5 @@
 module Bobot
   module Event
-    # The Delivery class represents the receipt of a delivered message.
     class Delivery
       include Bobot::Event::Common
 

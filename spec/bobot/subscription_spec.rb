@@ -15,8 +15,10 @@ RSpec.describe Bobot::Subscription do
   end
 
   before do
-    Bobot.page_access_token = access_token
-    Bobot.page_id = page_id
+    Bobot.config.pages << Bobot::Configuration::Page.new(
+      page_access_token: access_token,
+      page_id:           page_id,
+    )
   end
 
   describe '.set' do

@@ -1,7 +1,7 @@
 module Bobot
   module GraphFacebook
     GRAPH_FB_URL = 'https://graph.facebook.com'.freeze
-    GRAPH_FB_VERSION = 'v2.10'.freeze
+    GRAPH_FB_VERSION = 'v2.11'.freeze
 
     module ClassMethods
       def graph_get(path, query: {})
@@ -19,7 +19,7 @@ module Bobot
         end
         res = https.request(req)
         json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        if Bobot.debug_log
+        if Bobot.config.debug_log
           puts "[GET] >> #{uri.request_uri}"
           puts "[GET] << #{json}"
         end
@@ -44,7 +44,7 @@ module Bobot
         end
         res = https.request(req)
         json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        if Bobot.debug_log
+        if Bobot.config.debug_log
           puts "[POST] >> #{uri.request_uri}"
           puts "[POST] << #{json}"
         end
@@ -69,7 +69,7 @@ module Bobot
         end
         res = https.request(req)
         json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        if Bobot.debug_log
+        if Bobot.config.debug_log
           puts "[DELETE] >> #{uri.request_uri}"
           puts "[DELETE] << #{json}"
         end

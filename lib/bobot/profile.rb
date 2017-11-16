@@ -2,18 +2,14 @@ module Bobot
   module Profile
     include Bobot::GraphFacebook
 
-    def set(body:, query: nil)
-      query ||= { access_token: Bobot.page_access_token }
-      query[:access_token] = Bobot.page_access_token unless query.key?("access_token")
+    def set(body:, query:)
       graph_post '/me/messenger_profile', body: body, query: {
         access_token: query.fetch(:access_token),
       }
     end
     module_function :set
 
-    def unset(body:, query: nil)
-      query ||= { access_token: Bobot.page_access_token }
-      query[:access_token] = Bobot.page_access_token unless query.key?("access_token")
+    def unset(body:, query:)
       graph_delete '/me/messenger_profile', body: body, query: {
         access_token: query.fetch(:access_token),
       }

@@ -8,10 +8,6 @@ module Bobot
 
     config.action_dispatch.rescue_responses['Bobot::ActionNotAllowed'] = :forbidden
 
-    initializer 'bobot.load_app_root' do |app|
-      Bobot.app_root = app.root
-    end
-
     initializer 'Bobot setup middlewares' do |app|
       app.config.middleware.use ActionDispatch::Flash
     end

@@ -14,5 +14,19 @@ require 'bobot/commander'
 require 'bobot/event'
 
 module Bobot
-  extend Configuration
+  def self.configure
+    yield config
+  end
+
+  def self.config
+    @config ||= Configuration.new
+  end
+
+  def self.config=(config)
+    @config = config
+  end
+
+  configure do |config|
+    config.pages = []
+  end
 end

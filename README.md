@@ -31,16 +31,26 @@ Typing the following command in your Rails application will add the bot to your 
 `config/bobot.yml` contains your bot keys
 `app/bobot/workflow.rb` contains the workflow of your bot
 
-You can run in a Rails console:
-`Bobot.update_facebook_setup!`
+You can access to page settings:
+```
+Bobot.config.find_page_by_id(facebook_page_id)
+Bobot.config.find_page_by_slug(facebook_page_slug)
+```
+
+After fetching the page with command above, you have access to:
+`update_facebook_setup!`
 
 Or one by one in a Rails console:
-- `Bobot.subscribe_to_facebook_page!`
-- `Bobot.unsubscribe_to_facebook_page!`
-- `Bobot.set_greeting_text!`
-- `Bobot.set_whitelist_domains!`
-- `Bobot.set_get_started_button!`
-- `Bobot.set_persistent_menu!`
+- `subscribe_to_facebook_page!`
+- `unsubscribe_to_facebook_page!`
+- `unset_greeting_text!`
+- `set_greeting_text!`
+- `unset_whitelist_domains!`
+- `set_whitelist_domains!`
+- `unset_get_started_button!`
+- `set_get_started_button!`
+- `unset_persistent_menu!`
+- `set_persistent_menu!`
 
 Greeting Text and Persistent Menus are translated by I18n.
 You have to define into your `config/application.rb` your available_locales as I18n defined them.

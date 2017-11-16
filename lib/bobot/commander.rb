@@ -11,6 +11,7 @@ module Bobot
       account_linking
       referral
       message_echo
+      message_request
     ].freeze
 
     include Bobot::GraphFacebook
@@ -32,28 +33,28 @@ module Bobot
       def receive(payload)
         event = Bobot::Event.parse(payload)
         hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        puts "[ActiveJob] << Bobot::HookJob with event #{event.class}" if Bobot.debug_log
-        #event.mark_as_seen
+        puts "[ActiveJob] << Bobot::HookJob with event #{event.class}" if Bobot.config.debug_log
+        # event.mark_as_seen
         job = Bobot::CommanderJob
-        if Bobot.async
+        if Bobot.config.async
           job.perform_later(payload: payload)
         else
           job.perform_now(payload: payload)
         end
       rescue KeyError
-        $stderr.puts "Ignoring #{event.class} (no hook registered)"
+        warn "Ignoring #{event.class} (no hook registered)"
       end
 
       def trigger(payload)
         event = Bobot::Event.parse(payload)
         hook = hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        puts "[ActiveJob] >> Bobot::HookJob related to event #{name.class}" if Bobot.debug_log
-        #event.show_typing(state: true)
+        puts "[ActiveJob] >> Bobot::HookJob related to event #{name.class}" if Bobot.config.debug_log
+        # event.show_typing(state: true)
         hook.call(event)
-        #event.show_typing(state: false)
+        # event.show_typing(state: false)
         [event, event.payloads_sent[1..-2]]
       rescue KeyError
-        $stderr.puts "Ignoring #{event.class} (no hook registered)"
+        warn "Ignoring #{event.class} (no hook registered)"
       end
 
       def hooks

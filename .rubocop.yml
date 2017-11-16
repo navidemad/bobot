@@ -18,9 +18,15 @@ Metrics/BlockNesting:
 Metrics/BlockLength:
   Max: 30
 
+Lint/RescueWithoutErrorClass:
+  Enabled: false
+  
+Layout/AlignArray:
+  Enabled: false  
+
 Metrics/ClassLength:
   CountComments: false
-  Max: 100
+  Max: 180
 
 Metrics/CyclomaticComplexity:
   Enabled: false
@@ -34,7 +40,7 @@ Metrics/MethodLength:
   Max: 45
 
 Metrics/ModuleLength:
-  Max: 170
+  Max: 175
 
 Metrics/ParameterLists:
   Max: 6
@@ -47,6 +53,9 @@ Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
 Style/Alias:
+  Enabled: false
+  
+Style/GuardClause:
   Enabled: false
 
 Style/CollectionMethods:

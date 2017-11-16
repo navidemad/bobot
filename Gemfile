@@ -2,10 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :active_record do
-  gem 'mysql2', platforms: [:ruby, :mswin, :mingw]
-end
-
 group :development, :test do
   gem 'byebug'
 end

@@ -1,8 +1,9 @@
 module Bobot
   module Event
-    # The Message echo class represents an
-    # incoming Facebook Messenger message
     class MessageEcho < Message
+      def access_token
+        Bobot.config.find_page_by_id(sender["id"]).try(:page_access_token)
+      end
     end
   end
 end

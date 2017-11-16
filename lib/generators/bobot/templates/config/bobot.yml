@@ -1,39 +1,48 @@
 development:
-  app_id:             "123"
-  app_secret:         "456"
-  page_id:            "789"
-  page_access_token:  "abc"
-  verify_token:       "your token"
-  domains:            "whitelisted-domain.com,second-whitelisted-domain.com"
-  debug_log:          true
-  async:              false
+  app_id: "123"
+  app_secret: "456"
+  verify_token: "your token"
+  domains: "whitelisted-domain.com,second-whitelisted-domain.com"
+  debug_log: true
+  async: false
+  pages: 
+    - slug: "facebook_1"
+      language: "fr"
+      page_id: "789"
+      page_access_token: "abc"
 
 test:
-  app_id:             "123"
-  app_secret:         "456"
-  page_id:            "789"
-  page_access_token:  "abc"
-  verify_token:       "your token"
-  domains:            "whitelisted-domain.com,second-whitelisted-domain.com"
-  debug_log:          true
-  async:              false
+  app_id: "123"
+  app_secret: "456"
+  verify_token: "your token"
+  domains: "whitelisted-domain.com,second-whitelisted-domain.com"
+  debug_log: true
+  async: false
+  pages: 
+    - slug: "facebook_1"
+      page_id: "789"
+      page_access_token: "abc"
 
 staging:
-  app_id:             <%= ENV["STAGING_BOBOT_APP_ID"] %>
-  app_secret:         <%= ENV["STAGING_BOBOT_APP_SECRET"] %>
-  page_id:            <%= ENV["STAGING_BOBOT_PAGE_ID"] %>
-  page_access_token:  <%= ENV["STAGING_BOBOT_PAGE_ACCESS_TOKEN"] %>
-  verify_token:       <%= ENV["STAGING_BOBOT_VERIFY_TOKEN"] %>
-  domains:            <%= ENV["STAGING_BOBOT_DOMAINS"] %>
-  debug_log:          <%= ENV["STAGING_BOBOT_DEBUG_LOG"] %>
-  async:              <%= ENV["STAGING_BOBOT_ASYNC"] %>
+  app_id: <%= ENV["STAGING_BOBOT_APP_ID"] %>
+  app_secret: <%= ENV["STAGING_BOBOT_APP_SECRET"] %>
+  verify_token: <%= ENV["STAGING_BOBOT_VERIFY_TOKEN"] %>
+  domains: <%= ENV["STAGING_BOBOT_DOMAINS"] %>
+  debug_log: <%= ENV["STAGING_BOBOT_DEBUG_LOG"] %>
+  async: <%= ENV["STAGING_BOBOT_ASYNC"] %>
+  pages: 
+    - slug: <%= ENV["STAGING_BOBOT_PAGE_SLUG"] %>
+      page_id: <%= ENV["STAGING_BOBOT_PAGE_ID"] %>
+      page_access_token: <%= ENV["STAGING_BOBOT_PAGE_ACCESS_TOKEN"] %>
 
 production:
-  app_id:             <%= ENV["PRODUCTION_BOBOT_APP_ID"] %>
-  app_secret:         <%= ENV["PRODUCTION_BOBOT_APP_SECRET"] %>
-  page_id:            <%= ENV["PRODUCTION_BOBOT_PAGE_ID"] %>
-  page_access_token:  <%= ENV["PRODUCTION_BOBOT_PAGE_ACCESS_TOKEN"] %>
-  verify_token:       <%= ENV["PRODUCTION_BOBOT_VERIFY_TOKEN"] %>
-  domains:            <%= ENV["PRODUCTION_BOBOT_DOMAINS"] %>
-  debug_log:          <%= ENV["PRODUCTION_BOBOT_DEBUG_LOG"] %>
-  async:              <%= ENV["PRODUCTION_BOBOT_ASYNC"] %>
+  app_id: <%= ENV["PRODUCTION_BOBOT_APP_ID"] %>
+  app_secret: <%= ENV["PRODUCTION_BOBOT_APP_SECRET"] %>
+  verify_token: <%= ENV["PRODUCTION_BOBOT_VERIFY_TOKEN"] %>
+  domains: <%= ENV["PRODUCTION_BOBOT_DOMAINS"] %>
+  debug_log: <%= ENV["PRODUCTION_BOBOT_DEBUG_LOG"] %>
+  async: <%= ENV["PRODUCTION_BOBOT_ASYNC"] %>
+  pages: 
+    - slug: <%= ENV["PRODUCTION_BOBOT_PAGE_SLUG"] %>
+      page_id: <%= ENV["PRODUCTION_BOBOT_PAGE_ID"] %>
+      page_access_token: <%= ENV["PRODUCTION_BOBOT_PAGE_ACCESS_TOKEN"] %>

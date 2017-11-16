@@ -4,21 +4,27 @@ RSpec.describe Bobot do
   describe '#configure' do
     it 'sets correct configuration' do
       Bobot.configure do |config|
-        config.app_id = '1'
-        config.app_secret = '2'
-        config.page_access_token = '3'
-        config.verify_token = '4'
-        config.page_id = '5'
+        config.app_id = 'app_id'
+        config.app_secret = 'app_secret'
+        config.verify_token = 'verify_token'
         config.debug_log = true
         config.async = true
+        config.pages << Bobot::Configuration::Page.new(
+          slug: 'slug',
+          language: 'language',
+          page_access_token: 'page_access_token',
+          page_id: 'page_id',
+        )
       end
-      expect(Bobot.app_id).to eql('1')
-      expect(Bobot.app_secret).to eql('2')
-      expect(Bobot.page_access_token).to eql('3')
-      expect(Bobot.verify_token).to eql('4')
-      expect(Bobot.page_id).to eql('5')
-      expect(Bobot.debug_log).to eql(true)
-      expect(Bobot.async).to eql(true)
+      expect(Bobot.config.app_id).to eql('app_id')
+      expect(Bobot.config.app_secret).to eql('app_secret')
+      expect(Bobot.config.verify_token).to eql('verify_token')
+      expect(Bobot.config.debug_log).to eql(true)
+      expect(Bobot.config.async).to eql(true)
+      expect(Bobot.config.pages[0].slug).to eql('slug')
+      expect(Bobot.config.pages[0].language).to eql('language')
+      expect(Bobot.config.pages[0].page_access_token).to eql('page_access_token')
+      expect(Bobot.config.pages[0].page_id).to eql('page_id')
     end
   end
 end
