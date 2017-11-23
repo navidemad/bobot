@@ -1,6 +1,6 @@
 module Bobot
   class Configuration
-    attr_accessor :app_id, :app_secret, :verify_token, :debug_log, :async, :pages
+    attr_accessor :app_id, :app_secret, :verify_token, :domains, :debug_log, :async, :pages
 
     def domains=(rhs)
       return unless rhs.present?
@@ -71,7 +71,7 @@ module Bobot
         if language.nil?
           # Default text
           greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: I18n.default_locale, default: nil)
-          greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
+          greeting_texts << { locale: ‘default’, text: greeting_text } if greeting_text.present?
           # Each languages
           I18n.available_locales.each do |locale|
             greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: locale, default: nil)
@@ -83,15 +83,13 @@ module Bobot
           end
         else
           greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: language, default: nil)
-          greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
+          greeting_texts << { locale: ‘default’, text: greeting_text } if greeting_text.present?
         end
         if greeting_texts.present?
           Bobot::Profile.set(
             body: { greeting: greeting_texts },
             query: { access_token: page_access_token },
           )
-        else
-          unset_greeting_text!
         end
       end
 
@@ -108,20 +106,15 @@ module Bobot
       ## == a page to specify a domain whitelist. ==
       def set_whitelist_domains!
         raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
-        raise Bobot::InvalidParameter.new(:domains) unless domains.present?
-        if domains.present?
-          Bobot::Profile.set(
-            body: { whitelisted_domains: domains },
-            query: { access_token: page_access_token },
-          )
-        else
-          unset_whitelist_domains!
-        end
+        raise Bobot::InvalidParameter.new(:domains) unless Bobot.config.domains.present?
+        Bobot::Profile.set(
+          body: { whitelisted_domains: Bobot.config.domains },
+          query: { access_token: page_access_token },
+        )
       end
 
       def unset_whitelist_domains!
         raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
-        raise Bobot::InvalidParameter.new(:domains) unless domains.present?
         Bobot::Profile.unset(
           body: { fields: ["whitelisted_domains"] },
           query: { access_token: page_access_token },
@@ -159,7 +152,7 @@ module Bobot
           persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: I18n.default_locale, default: nil)
           if persistent_menu.present?
             persistent_menus << {
-              locale: 'default',
+              locale: ‘default’,
               composer_input_disabled: persistent_menu[:composer_input_disabled],
               call_to_actions: persistent_menu[:call_to_actions],
             }
@@ -181,7 +174,7 @@ module Bobot
           persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: language, default: nil)
           if persistent_menu.present?
             persistent_menus << {
-              locale: 'default',
+              locale: ‘default’,
               composer_input_disabled: persistent_menu[:composer_input_disabled],
               call_to_actions: persistent_menu[:call_to_actions],
             }
@@ -192,8 +185,6 @@ module Bobot
             body: { persistent_menu: persistent_menus },
             query: { access_token: page_access_token },
           )
-        else
-          unset_persistent_menu!
         end
       end
 

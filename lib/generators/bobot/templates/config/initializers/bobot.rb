@@ -14,10 +14,11 @@ if bobot_config.present?
     config.async         = bobot_config["async"],
     bobot_config["pages"].each do |page|
       config.pages << Bobot::Configuration::Page.new(
-        slug:              page["slug"],
-        language:          page["language"],
-        page_access_token: page["page_access_token"],
-        page_id:           page["page_id"],
+        slug:                page["slug"],
+        language:            page["language"],
+        page_access_token:   page["page_access_token"],
+        page_id:             page["page_id"],
+        get_started_payload: page["get_started_payload"],
       )
     end
   end
