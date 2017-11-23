@@ -133,7 +133,7 @@ module Bobot
       ## == messaging_postbacks field when setting up your webhook. ==
       def set_get_started_button!
         raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
-        raise Bobot::InvalidParameter.new(:access_token) unless get_started_payload.present?
+        raise Bobot::InvalidParameter.new(:get_started_payload) unless get_started_payload.present?
         Bobot::Profile.set(
           body: { get_started: { payload: get_started_payload } },
           query: { access_token: page_access_token },
