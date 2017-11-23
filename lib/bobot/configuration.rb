@@ -14,11 +14,11 @@ module Bobot
     end
 
     def find_page_by_id(page_id)
-      pages.find { |page| page.page_id == page_id }
+      pages.find { |page| page.page_id.to_s == page_id.to_s }
     end
 
     def find_page_by_slug(slug)
-      pages.find { |page| page.slug == slug }
+      pages.find { |page| page.slug.to_s == slug.to_s }
     end
 
     class Page
@@ -71,7 +71,7 @@ module Bobot
         if language.nil?
           # Default text
           greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: I18n.default_locale, default: nil)
-          greeting_texts << { locale: ‘default’, text: greeting_text } if greeting_text.present?
+          greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
           # Each languages
           I18n.available_locales.each do |locale|
             greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: locale, default: nil)
@@ -83,7 +83,7 @@ module Bobot
           end
         else
           greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: language, default: nil)
-          greeting_texts << { locale: ‘default’, text: greeting_text } if greeting_text.present?
+          greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
         end
         if greeting_texts.present?
           Bobot::Profile.set(
@@ -152,7 +152,7 @@ module Bobot
           persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: I18n.default_locale, default: nil)
           if persistent_menu.present?
             persistent_menus << {
-              locale: ‘default’,
+              locale: 'default',
               composer_input_disabled: persistent_menu[:composer_input_disabled],
               call_to_actions: persistent_menu[:call_to_actions],
             }
@@ -174,7 +174,7 @@ module Bobot
           persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: language, default: nil)
           if persistent_menu.present?
             persistent_menus << {
-              locale: ‘default’,
+              locale: 'default',
               composer_input_disabled: persistent_menu[:composer_input_disabled],
               call_to_actions: persistent_menu[:call_to_actions],
             }
