@@ -13,7 +13,7 @@ if bobot_config.present?
     config.debug_log     = bobot_config["debug_log"],
     config.async         = bobot_config["async"],
     bobot_config["pages"].each do |page|
-      config.pages << Bobot::Configuration::Page.new(
+      config.pages << Bobot::Page.new(
         slug:                page["slug"],
         language:            page["language"],
         page_id:             page["page_id"],

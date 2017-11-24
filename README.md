@@ -25,51 +25,59 @@ Or install it yourself as:
     
 ## Usage
 
-### Configuration in Rails app
+### Workflow
 
-#### Setup app
+<details>
+  <summary>When the human has selected an option, you can act on it:</summary>
+  <p>
+  
+    ### Configuration in Rails app
 
-Run the command to install basic files: 
-```ruby
-rails g bobot:install
-```
-- add config/initializers/bobot.rb
-- edit config/routes.rb
-- add config/locales/bobot.en.yml
-- add config/locales/bobot.fr.yml
-- app/bobot/workflow.rb
+    Run the command to install basic files: 
+    ```ruby
+    rails g bobot:install
+    ```
+    - add config/initializers/bobot.rb
+    - edit config/routes.rb
+    - add config/locales/bobot.en.yml
+    - add config/locales/bobot.fr.yml
+    - app/bobot/workflow.rb
 
------
+    -----
 
-Then, add `bobot` section into `secrets.yml`:
-```yml
-development:
-  bobot:
-    app_id: "123"
-    app_secret: "456"
-    verify_token: "your token"
-    domains: "whitelisted-domain.com,second-whitelisted-domain.com"
-    debug_log: true
-    async: false
-    pages: 
-      - slug: "facebook_1"
-        language: "fr"
-        page_id: "789"
-        page_access_token: "abc"
-        get_started_payload: "get_started"
-```
+    Then, add `bobot` section into `secrets.yml`:
+    ```yml
+    development:
+      bobot:
+        app_id: "123"
+        app_secret: "456"
+        verify_token: "your token"
+        domains: "whitelisted-domain.com,second-whitelisted-domain.com"
+        debug_log: true
+        async: false
+        pages: 
+          - slug: "facebook_1"
+            language: "fr"
+            page_id: "789"
+            page_access_token: "abc"
+            get_started_payload: "get_started"
+    ```
 
------
+    -----
 
-From now each pages will be accessible with `Bobot.pages[:slug]`.
-Now to create the workflow of your bot all the code will go into the file:
-- `app/bobot/workflow.rb` [(differents workflow usages)](BOBOT_WORKFLOW.md)
+    Now to create the workflow of your bot all the code will go into the file:
+    - `app/bobot/workflow.rb`
+    
+  </p>
+</details>
 
-#### Setup pages
+### Configuration Facebook Page (persistent_menu, greeting_text, domains, get_started)
 
 You can access to page settings:
-- `page = Bobot.config.find_page_by_id(facebook_page_id)`
-- `page = Bobot.config.find_page_by_slug(facebook_page_slug)`
+- `page = Bobot::Page.find(facebook_page_id)`
+- `page = Bobot::Page.find_by_slug(facebook_page_slug)`
+- `page = Bobot::Page[facebook_page_id]`
+- `page = Bobot::Page[facebook_page_slug]`
 
 After fetching the page with command above, you have access to:
 - `page.update_facebook_setup!`

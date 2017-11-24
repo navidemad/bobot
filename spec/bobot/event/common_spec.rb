@@ -37,7 +37,8 @@ RSpec.describe Bobot::Dummy do
   let(:access_token) { 'access_token' }
 
   before do
-    Bobot.config.pages << Bobot::Configuration::Page.new(
+    Bobot.config.pages << Bobot::Page.new(
+      page_id: payload["recipient"]["id"],
       page_access_token: access_token,
     )
   end
@@ -64,14 +65,16 @@ RSpec.describe Bobot::Dummy do
 
   describe '.show_typing' do
     it 'sends a typing on indicator to the sender' do
-      expect(subject).to receive(:deliver).with(
-        payload_template: { sender_action: 'typing_on' }
+      expect(subject.page).to receive(:deliver).with(
+        payload_template: { sender_action: 'typing_on' },
+        to: payload['recipient']['id'],
       )
       subject.show_typing(state: true)
     end
     it 'sends a typing on indicator to the sender' do
-      expect(subject).to receive(:deliver).with(
-        payload_template: { sender_action: 'typing_off' }
+      expect(subject.page).to receive(:deliver).with(
+        payload_template: { sender_action: 'typing_off' },
+        to: payload['recipient']['id'],
       )
       subject.show_typing(state: false)
     end
@@ -79,8 +82,9 @@ RSpec.describe Bobot::Dummy do
 
   describe '.mark_as_seen' do
     it 'sends a typing off indicator to the sender' do
-      expect(subject).to receive(:deliver).with(
-        payload_template: { sender_action: 'mark_seen' }
+      expect(subject.page).to receive(:deliver).with(
+        payload_template: { sender_action: 'mark_seen' },
+        to: payload['recipient']['id'],
       )
       subject.mark_as_seen
     end
@@ -88,8 +92,9 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_text' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
-        payload_template: { message: { text: 'Hello, human' } }
+      expect(subject.page).to receive(:deliver).with(
+        payload_template: { message: { text: 'Hello, human' } },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_text(text: 'Hello, human')
     end
@@ -97,7 +102,7 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_image' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             attachment: {
@@ -109,6 +114,7 @@ RSpec.describe Bobot::Dummy do
             },
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_image(url: 'https://www.foo.bar/image.jpg')
     end
@@ -116,7 +122,7 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_audio' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             attachment: {
@@ -127,6 +133,7 @@ RSpec.describe Bobot::Dummy do
             },
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_audio(url: 'https://www.foo.bar/audio.mp3')
     end
@@ -134,7 +141,7 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_video' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             attachment: {
@@ -145,6 +152,7 @@ RSpec.describe Bobot::Dummy do
             },
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_video(url: 'https://www.foo.bar/video.mp4')
     end
@@ -152,7 +160,7 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_file' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             attachment: {
@@ -163,6 +171,7 @@ RSpec.describe Bobot::Dummy do
             },
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_file(url: 'https://www.foo.bar/file.zip')
     end
@@ -170,7 +179,7 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_quick_replies' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             text: 'Pick a color:',
@@ -189,6 +198,7 @@ RSpec.describe Bobot::Dummy do
             ]
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_quick_replies(
         text: 'Pick a color:',
@@ -208,7 +218,7 @@ RSpec.describe Bobot::Dummy do
       )
     end
     it 'asks the location to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             text: 'Where are you',
@@ -220,6 +230,7 @@ RSpec.describe Bobot::Dummy do
             ]
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_quick_replies(
         text: 'Where are you',
@@ -232,7 +243,7 @@ RSpec.describe Bobot::Dummy do
 
   describe '.reply_with_buttons' do
     it 'replies to the sender' do
-      expect(subject).to receive(:deliver).with(
+      expect(subject.page).to receive(:deliver).with(
         payload_template: {
           message: {
             attachment: {
@@ -248,6 +259,7 @@ RSpec.describe Bobot::Dummy do
             }
           },
         },
+        to: payload['recipient']['id'],
       )
       subject.reply_with_buttons(
         text: 'Human, do you like me?',

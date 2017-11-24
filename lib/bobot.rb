@@ -12,6 +12,7 @@ require 'bobot/user'
 require 'bobot/buttons'
 require 'bobot/commander'
 require 'bobot/event'
+require 'bobot/page'
 
 module Bobot
   def self.configure

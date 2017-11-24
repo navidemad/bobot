@@ -28,8 +28,7 @@ Layout/AlignArray:
   Enabled: false  
 
 Metrics/ClassLength:
-  CountComments: false
-  Max: 180
+  Enabled: false  
 
 Metrics/CyclomaticComplexity:
   Enabled: false

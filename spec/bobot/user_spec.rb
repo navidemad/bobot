@@ -16,7 +16,7 @@ RSpec.describe Bobot::User do
   end
 
   before do
-    Bobot.config.pages << Bobot::Configuration::Page.new(
+    Bobot.config.pages << Bobot::Page.new(
       page_access_token: access_token,
       page_id:           page_id,
     )

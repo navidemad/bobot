@@ -2,18 +2,10 @@ module Bobot
   module Event
     # Common attributes for all incoming data from Facebook.
     module Common
-      attr_reader :messaging
-      attr_accessor :delay_options
-      attr_accessor :payloads_sent
+      attr_reader :messaging, :page
 
       def initialize(messaging)
         @messaging = messaging
-        @delay_options = { wait: 0, wait_until: nil }
-        @payloads_sent = []
-      end
-
-      def add_delivery(payload:)
-        @payloads_sent << payload
       end
 
       def sender
@@ -24,146 +16,65 @@ module Bobot
         @messaging['recipient']
       end
 
-      def delay(wait: 0, wait_until: nil)
-        raise Bobot::FieldFormat.new('wait has to be positive integer.') unless wait.present?
-        if Bobot.config.async
-          @delay_options[:wait] = wait if wait >= 0
-          @delay_options[:wait_until] = wait_until if wait_until.present?
-        else
-          warn "delay is ignored since you configured Bobot.config.async to 'false'"
-        end
-        self
-      end
-
       def sent_at
         Time.zone.at(@messaging['timestamp'] / 1000)
       end
 
-      def deliver(payload_template:)
-        raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
-        @payloads_sent << payload_template
-        job = Bobot::DeliverJob
-        if Bobot.config.async
-          job = job.set(wait: @delay_options[:wait]) if @delay_options[:wait] > 0
-          job = job.set(wait: @delay_options[:wait_until]) if @delay_options[:wait_until].present?
-          job.perform_later(sender: sender, access_token: access_token, payload_template: payload_template)
-        else
-          job.perform_now(sender: sender, access_token: access_token, payload_template: payload_template)
-        end
-      end
-
       def sender_action(sender_action:)
-        deliver(payload_template: { sender_action: sender_action })
+        page.sender_action(sender_action: sender_action, to: sender["id"])
       end
 
       def show_typing(state:)
-        sender_action(sender_action: state ? 'typing_on' : 'typing_off')
+        page.show_typing(state: state, to: sender["id"])
       end
 
       def mark_as_seen
-        sender_action(sender_action: 'mark_seen')
+        page.mark_as_seen(to: sender["id"])
       end
 
       def reply(payload_message:)
-        deliver(payload_template: { message: payload_message })
+        page.send(payload_message: payload_message, to: sender["id"])
       end
 
       def reply_with_text(text:)
-        raise Bobot::FieldFormat.new('text is required.') unless text.present?
-        raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
-        reply(
-          payload_message: {
-            text: text,
-          },
-        )
+        page.send_text(text: text, to: sender["id"])
       end
 
       def reply_with_attachment(url:, type:)
-        raise Bobot::FieldFormat.new('url is required.') unless url.present?
-        raise Bobot::FieldFormat.new('type is required.') unless type.present?
-        raise Bobot::FieldFormat.new('type is invalid, only "image, audio, video, file" are permitted.') unless %w[image audio video file].include?(type)
-        reply(
-          payload_message: {
-            attachment: {
-              type: type,
-              payload: {
-                url: url,
-              }.tap { |properties| properties.merge!(is_reusable: true) if type == 'image' },
-            },
-          },
-        )
+        page.send_attachment(url: url, type: type, to: sender["id"])
       end
 
       def reply_with_image(url:)
-        reply_with_attachment(url: url, type: 'image')
+        page.send_image(url: url, to: sender["id"])
       end
 
       def reply_with_audio(url:)
-        reply_with_attachment(url: url, type: 'audio')
+        page.send_audio(url: url, to: sender["id"])
       end
 
       def reply_with_video(url:)
-        reply_with_attachment(url: url, type: 'video')
+        page.send_video(url: url, to: sender["id"])
       end
 
       def reply_with_file(url:)
-        reply_with_attachment(url: url, type: 'file')
+        page.send_file(url: url, to: sender["id"])
       end
 
       def reply_with_quick_replies(text:, quick_replies:)
-        raise Bobot::FieldFormat.new('text is required.') unless text.present?
-        raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
-        raise Bobot::FieldFormat.new('quick_replies are required.') unless quick_replies.present?
-        raise Bobot::FieldFormat.new('quick_replies are limited to 11.') if quick_replies.size > 11
-        reply(
-          payload_message: {
-            text: text,
-            quick_replies: quick_replies,
-          },
-        )
+        page.send_quick_replies(text: text, quick_replies: quick_replies, to: sender["id"])
       end
 
       def reply_with_buttons(text:, buttons:)
-        raise Bobot::FieldFormat.new('text is required.') unless text.present?
-        raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
-        raise Bobot::FieldFormat.new('buttons are required.') unless buttons.present?
-        raise Bobot::FieldFormat.new('buttons are limited to 3.') if buttons.size > 3
-        reply(
-          payload_message: {
-            attachment: {
-              type: 'template',
-              payload: {
-                template_type: 'button',
-                text: text,
-                buttons: buttons,
-              },
-            },
-          },
-        )
+        page.send_buttons(text: text, buttons: buttons, to: sender["id"])
       end
 
       def reply_with_generic(elements:, image_aspect_ratio: 'square')
-        raise Bobot::FieldFormat.new('elements are required.') if elements.nil?
-        raise Bobot::FieldFormat.new('elements are limited to 10.') if elements.size > 10
-        raise Bobot::FieldFormat.new('image_aspect_ratio is required.') if image_aspect_ratio.nil?
-        raise Bobot::FieldFormat.new('image_aspect_ratio is invalid, only "square, horizontal" are permitted.') unless %w[square horizontal].include?(image_aspect_ratio)
-        reply(
-          payload_message: {
-            attachment: {
-              type: 'template',
-              payload: {
-                template_type: 'generic',
-                image_aspect_ratio: image_aspect_ratio,
-                elements: elements,
-              },
-            },
-          },
-        )
+        page.send_generic(elements: elements, image_aspect_ratio: image_aspect_ratio, to: sender["id"])
       end
       alias_method :reply_with_carousel, :reply_with_generic
 
-      def access_token
-        Bobot.config.find_page_by_id(recipient["id"]).try(:page_access_token)
+      def page
+        Bobot::Page.find(recipient["id"])
       end
     end
   end
