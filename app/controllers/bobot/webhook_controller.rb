@@ -2,11 +2,7 @@ module Bobot
   class WebhookController < Bobot::ApplicationController
     class BadRequestError < Error; end
 
-    include ActionView::Helpers::TextHelper
-
-    skip_before_action :verify_authenticity_token, raise: false
-
-    layout :bobot_layout rescue nil
+    skip_forgery_protection raise: false, only: :webhook
 
     X_HUB_SIGNATURE_MISSING_WARNING = <<-HEREDOC.freeze
       The X-Hub-Signature header is not present in the request. This is
@@ -91,10 +87,6 @@ module Bobot
           end
         end
       end
-    end
-
-    def bobot_layout
-      'bobot/application'
     end
   end
 end

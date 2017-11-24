@@ -15,7 +15,6 @@ module Bobot
       gsub_file 'config/routes.rb', %r{mount Bobot::Engine => \'\/.+\'(, as: \'bot\')?}, ''
       remove_file 'config/initializers/bobot.rb'
       remove_file 'app/bobot/workflow.rb'
-      remove_file 'config/bobot.yml'
       remove_file 'config/locales/bobot.en.yml'
       remove_file 'config/locales/bobot.fr.yml'
       display 'Done! Bobot has been uninstalled.'

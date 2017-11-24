@@ -1,5 +1,5 @@
-bobot_config_path = Rails.root.join("config", "bobot.yml")
-bobot_config = YAML.safe_load(ERB.new(File.read(bobot_config_path)).result, [], [], true)[Rails.env]
+bobot_config_path = Rails.root.join("config", "secrets.yml")
+bobot_config = YAML.safe_load(ERB.new(File.read(bobot_config_path)).result, [], [], true)[Rails.env]["bobot"]
 
 if bobot_config.present?
   unless bobot_config.key?("pages")
@@ -16,8 +16,8 @@ if bobot_config.present?
       config.pages << Bobot::Configuration::Page.new(
         slug:                page["slug"],
         language:            page["language"],
-        page_access_token:   page["page_access_token"],
         page_id:             page["page_id"],
+        page_access_token:   page["page_access_token"],
         get_started_payload: page["get_started_payload"],
       )
     end

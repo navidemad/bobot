@@ -19,7 +19,6 @@ module Bobot
       route("mount Bobot::Engine => '/#{namespace}', as: 'bot'")
       template 'config/initializers/bobot.rb', 'config/initializers/bobot.rb'
       template 'app/bobot/workflow.rb', 'app/bobot/workflow.rb'
-      copy_file 'config/bobot.yml', 'config/bobot.yml'
       copy_file 'config/locales/bobot.en.yml', 'config/locales/bobot.en.yml'
       copy_file 'config/locales/bobot.fr.yml', 'config/locales/bobot.fr.yml'
       display 'Installation done', :green
