@@ -21,6 +21,9 @@ Metrics/BlockLength:
 Lint/RescueWithoutErrorClass:
   Enabled: false
   
+Lint/DuplicateMethods:
+  Enabled: false
+  
 Layout/AlignArray:
   Enabled: false  
 

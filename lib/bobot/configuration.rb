@@ -1,6 +1,6 @@
 module Bobot
   class Configuration
-    attr_accessor :app_id, :app_secret, :verify_token, :debug_log, :async, :pages
+    attr_accessor :app_id, :app_secret, :verify_token, :domains, :debug_log, :async, :pages
 
     def domains=(rhs)
       return unless rhs.present?
@@ -11,10 +11,6 @@ module Bobot
       else
         raise Bobot::InvalidParameter.new(:domains, "should be a string or an array")
       end
-    end
-
-    def domains
-      @domains
     end
 
     def find_page_by_id(page_id)

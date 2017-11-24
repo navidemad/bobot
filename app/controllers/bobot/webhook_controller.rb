@@ -2,8 +2,6 @@ module Bobot
   class WebhookController < Bobot::ApplicationController
     class BadRequestError < Error; end
 
-    skip_forgery_protection raise: false, only: :webhook
-
     X_HUB_SIGNATURE_MISSING_WARNING = <<-HEREDOC.freeze
       The X-Hub-Signature header is not present in the request. This is
       expected for the first webhook requests. If it continues after
