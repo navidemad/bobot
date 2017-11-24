@@ -3,7 +3,10 @@
 [![Build Status](https://travis-ci.org/navidemad/bobot.svg?branch=master)](https://travis-ci.org/navidemad/bobot) [![Gem Version](https://img.shields.io/gem/v/bobot.svg?style=flat)](https://rubygems.org/gems/bobot)
  
 > Bobot is a Ruby wrapped framework to build easily a Facebook Messenger Bot.</b>
-`gem 'bobot'`
+
+```ruby
+gem 'bobot'
+```
 
 <details>
   <summary>First steps to setup</summary>
@@ -37,6 +40,7 @@
   <summary>Webhook url</summary>
   <p>
     Facebook wants an url where he can send me information to communicate with my server.
+    
     When you installed Bobot, a line has been added to your config/routes.rb
 
     mount Bobot::Engine => "/XXXXXX", as: "bobot"
@@ -52,10 +56,13 @@
   <summary>Persistent Menu, Greeting Text, Whitelist domains, Get Started</summary>
   <p>
     After having define into your `config/application.rb` your I18n.available_locales.
+    
     Then, persistent menu and the greeting text will catch the content of them from `locales/bobot.{locale}.yml`
+    
     - config/locales/bobot.{locale}.yml
     
     The whitelist domains and get_started button settings have to be set in:
+    
     - config/secrets.yml
   </p>
 </details>
@@ -63,16 +70,16 @@
 <details>
   <summary>Find a page</summary>
   <p>
-    You can access to page settings:
+    - You can access to page settings:
     - `page = Bobot::Page.find(facebook_page_id)`
     - `page = Bobot::Page.find_by_slug(facebook_page_slug)`
     - `page = Bobot::Page[facebook_page_id]`
     - `page = Bobot::Page[facebook_page_slug]`
 
-    After fetching the page with command above, you have access to:
+    - After fetching the page with command above, you have access to:
     - `page.update_facebook_setup!`
 
-    Or one by one in a Rails console:
+    - Or one by one in a Rails console:
     - `page.subscribe_to_facebook_page!`
     - `page.unsubscribe_to_facebook_page!`
     - `page.unset_greeting_text!`
@@ -89,8 +96,7 @@
 <details>
   <summary>Page methods: </summary>
   <p>
-    The parameter :to is the facebook uid of the target.
-
+    - The parameter :to is the facebook uid of the target.
     - page.sender_action(sender_action:, to: nil)
     - page.show_typing(state:, to: nil)
     - page.mark_as_seen(to: nil)
@@ -111,8 +117,7 @@
 <details>
   <summary>Event methods: </summary>
   <p>
-    The event is the parameter that you receive in your block when you are hooking an event on your workflow.rb
-
+    - The event is the parameter that you receive in your block when you are hooking an event on your workflow.rb
     - event.sender_action(sender_action:)
     - event.show_typing(state:)
     - event.mark_as_seen
@@ -129,6 +134,8 @@
     - event.reply_with_carousel(elements:, image_aspect_ratio: 'square')
   </p>
 </details>
+
+-----
 
 > You can find more informations on the workflow : [BOBOT_WORKFLOW](BOBOT_WORKFLOW.md)
 
