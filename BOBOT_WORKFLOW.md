@@ -1,10 +1,3 @@
-<p align="center">
-   <img src="https://raw.githubusercontent.com/navidemad/bobot/master/assets/images/bobot-logo.png"/>
-</p>
-
-# Bobot [![Build Status](https://travis-ci.org/navidemad/bobot.svg?branch=master)](https://travis-ci.org/navidemad/bobot) [![Gem Version](https://img.shields.io/gem/v/bobot.svg?style=flat)](https://rubygems.org/gems/bobot)
-`Bobot` is a Ruby wrapped framework to build easily a Facebook Messenger Bot.
-
 #### Sending and receiving messages
 
 <details>
