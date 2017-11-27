@@ -9,17 +9,17 @@ fr:
         persistent_menu:
           composer_input_disabled: false
           call_to_actions:
-            - title: "Mon compte"
-              type: "nested"
+            - type: "nested"
+              title: "Mon compte"
               call_to_actions:
-                - title: "C'est quoi un chatbot ?"
-                  type: "postback"
+                - type: "postback"
+                  title: "C'est quoi un chatbot ?"
                   payload: "WHAT_IS_A_CHATBOT"
-                - title: "Historique"
-                  type: "postback"
+                - type: "postback"
+                  title: "Historique"
                   payload: "HISTORY_PAYLOAD"
-                - title: "Contact Info"
-                  type: "postback"
+                - type: "postback"
+                  title: "Contact Info"
                   payload: "CONTACT_INFO_PAYLOAD"
             - type: "web_url"
               title: "Obtenir de l'aide"

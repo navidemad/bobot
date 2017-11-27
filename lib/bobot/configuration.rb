@@ -1,6 +1,6 @@
 module Bobot
   class Configuration
-    attr_accessor :app_id, :app_secret, :verify_token, :domains, :debug_log, :async, :pages
+    attr_accessor :app_id, :app_secret, :verify_token, :domains, :async, :pages
 
     def domains=(rhs)
       if rhs.nil?

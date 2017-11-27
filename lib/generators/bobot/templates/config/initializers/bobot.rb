@@ -10,7 +10,6 @@ if bobot_config.present?
     config.app_secret    = bobot_config["app_secret"],
     config.verify_token  = bobot_config["verify_token"],
     config.domains       = bobot_config["domains"],
-    config.debug_log     = bobot_config["debug_log"],
     config.async         = bobot_config["async"],
     bobot_config["pages"].each do |page|
       config.pages << Bobot::Page.new(

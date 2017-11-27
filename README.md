@@ -21,7 +21,6 @@ gem 'bobot'
         app_secret: "456"
         verify_token: "your token"
         domains: "whitelisted-domain.com,second-whitelisted-domain.com"
-        debug_log: true
         async: false
         pages: 
           - slug: "facebook_1"
@@ -60,11 +59,9 @@ gem 'bobot'
     After having define into your `config/application.rb` your I18n.available_locales.
     
     Then, persistent menu and the greeting text will catch the content of them from `locales/bobot.{locale}.yml`
-    
     - config/locales/bobot.{locale}.yml
     
     The whitelist domains and get_started button settings have to be set in:
-    
     - config/secrets.yml
   </p>
 </details>

@@ -1,6 +1,6 @@
 module Bobot
   class Page
-    attr_accessor :slug, :language, :page_id, :page_access_token, :get_started_payload, :payloads_sent
+    attr_accessor :slug, :language, :page_id, :page_access_token, :get_started_payload
 
     def initialize(options = {})
       self.slug = options[:slug]
@@ -8,7 +8,6 @@ module Bobot
       self.page_id = options[:page_id]
       self.page_access_token = options[:page_access_token]
       self.get_started_payload = options[:get_started_payload]
-      self.payloads_sent = []
     end
 
     #####################################
@@ -37,7 +36,6 @@ module Bobot
 
     def deliver(payload_template:, to:)
       raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
-      @payloads_sent << payload_template
       job = Bobot::DeliverJob
       if Bobot.config.async
         job.perform_later(target_facebook_uid: to, access_token: page_access_token, payload_template: payload_template)

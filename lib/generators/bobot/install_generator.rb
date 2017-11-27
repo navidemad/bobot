@@ -13,9 +13,8 @@ module Bobot
     desc 'Bobot install'
 
     def install
+      remove_file 'config/initializers/bobot.rb'
       namespace = ask_for('Where do you want to mount bobot?', 'bot', _namespace)
-      create_file 'config/routes.rb'
-      gsub_file 'config/routes.rb', %r{mount Bobot::Engine => \'\/.+\'(, as: \'bot\')?}, ''
       route("mount Bobot::Engine => '/#{namespace}', as: 'bot'")
       template 'config/initializers/bobot.rb', 'config/initializers/bobot.rb'
       template 'app/bobot/workflow.rb', 'app/bobot/workflow.rb'

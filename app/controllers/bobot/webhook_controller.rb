@@ -76,13 +76,9 @@ module Bobot
     end
 
     def trigger(events)
-      events['entry'.freeze].to_a.inject([]) do |payloads_sent, entry|
+      events['entry'.freeze].to_a.each do |entry|
         entry['messaging'.freeze].to_a.each do |messaging|
-          begin
-            payloads_sent << Bobot::Commander.receive(messaging)
-          rescue => e
-            payloads_sent << e.to_s
-          end
+          Bobot::Commander.receive(messaging)
         end
       end
     end

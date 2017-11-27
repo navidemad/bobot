@@ -33,7 +33,7 @@ module Bobot
       def receive(payload)
         event = Bobot::Event.parse(payload)
         hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        puts "[ActiveJob] << Bobot::HookJob with event #{event.class}" if Bobot.config.debug_log
+        Rails.logger.debug "[ActiveJob] << Bobot::HookJob with event #{event.class}"
         # event.mark_as_seen
         job = Bobot::CommanderJob
         if Bobot.config.async
@@ -42,19 +42,19 @@ module Bobot
           job.perform_now(payload: payload)
         end
       rescue KeyError
-        warn "Ignoring #{event.class} (no hook registered)"
+        warn "[receive] Ignoring #{event.class} (no hook registered)"
       end
 
       def trigger(payload)
         event = Bobot::Event.parse(payload)
         hook = hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        puts "[ActiveJob] >> Bobot::HookJob related to event #{name.class}" if Bobot.config.debug_log
+        Rails.logger.debug "[ActiveJob] >> Bobot::HookJob related to event #{name.class}"
         # event.show_typing(state: true)
         hook.call(event)
         # event.show_typing(state: false)
-        [event, event.payloads_sent[1..-2]]
+        event
       rescue KeyError
-        warn "Ignoring #{event.class} (no hook registered)"
+        warn "[trigger] Ignoring #{event.class} (no hook registered)"
       end
 
       def hooks

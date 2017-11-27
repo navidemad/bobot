@@ -19,10 +19,8 @@ module Bobot
         end
         res = https.request(req)
         json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        if Bobot.config.debug_log
-          puts "[GET] >> #{uri.request_uri}"
-          puts "[GET] << #{json}"
-        end
+        Rails.logger.debug "[GET] >> #{uri.request_uri}"
+        Rails.logger.debug "[GET] << #{json}"
         Bobot::ErrorParser.raise_errors_from(json)
         json
       end
@@ -44,10 +42,8 @@ module Bobot
         end
         res = https.request(req)
         json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        if Bobot.config.debug_log
-          puts "[POST] >> #{uri.request_uri}"
-          puts "[POST] << #{json}"
-        end
+        Rails.logger.debug "[POST] >> #{uri.request_uri}"
+        Rails.logger.debug "[POST] << #{json}"
         Bobot::ErrorParser.raise_errors_from(json)
         json
       end
@@ -69,10 +65,8 @@ module Bobot
         end
         res = https.request(req)
         json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        if Bobot.config.debug_log
-          puts "[DELETE] >> #{uri.request_uri}"
-          puts "[DELETE] << #{json}"
-        end
+        Rails.logger.debug "[DELETE] >> #{uri.request_uri}"
+        Rails.logger.debug "[DELETE] << #{json}"
         Bobot::ErrorParser.raise_errors_from(json)
         json
       end
