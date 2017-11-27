@@ -1,6 +1,13 @@
 module Bobot
   class DeliverJob < ApplicationJob
-    queue_as :default
+    
+    queue_as do
+      if Bobot.config.commander_queue_name.present?
+        Bobot.config.commander_queue_name
+      else
+        :default
+      end
+    end
 
     def perform(target_facebook_uid:, access_token:, payload_template:)
       Bobot::Commander.deliver(

@@ -22,6 +22,7 @@ gem 'bobot'
         verify_token: "your token"
         domains: "whitelisted-domain.com,second-whitelisted-domain.com"
         async: false
+        commander_queue_name: "default"
         pages: 
           - slug: "facebook_1"
             language: "fr"

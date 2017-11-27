@@ -6,11 +6,12 @@ if bobot_config.present?
     raise "Bobot: #{bobot_config_path} required an array key :pages (cf. https://github.com/navidemad/bobot)"
   end
   Bobot.configure do |config|
-    config.app_id        = bobot_config["app_id"],
-    config.app_secret    = bobot_config["app_secret"],
-    config.verify_token  = bobot_config["verify_token"],
-    config.domains       = bobot_config["domains"],
-    config.async         = bobot_config["async"],
+    config.app_id               = bobot_config["app_id"],
+    config.app_secret           = bobot_config["app_secret"],
+    config.verify_token         = bobot_config["verify_token"],
+    config.domains              = bobot_config["domains"],
+    config.async                = bobot_config["async"],
+    config.commander_queue_name = bobot_config["commander_queue_name"],
     bobot_config["pages"].each do |page|
       config.pages << Bobot::Page.new(
         slug:                page["slug"],
