@@ -1,20 +1,21 @@
-require "Typhoeus"
+require "typhoeus"
 require "uri"
 
 module Bobot
   module GraphFacebook
-    GRAPH_FB_URL = 'https://graph.facebook.com/v2.11/'.freeze
+    GRAPH_FB_URL = 'https://graph.facebook.com/v2.11'.freeze
     GRAPH_HEADERS = { Accept: "application/json", "Content-Type" => "application/json; charset=utf-8" }.freeze
 
     module ClassMethods
       def graph_get(path, query: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
-        req = Typhoeus::Request.new(
+        req = ::Typhoeus::Request.new(
           url,
           method: :get,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
+          verbose: false,
         ).run
         response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
@@ -27,13 +28,14 @@ module Bobot
 
       def graph_post(path, query: {}, body: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
-        req = Typhoeus::Request.new(
+        req = ::Typhoeus::Request.new(
           url,
           method: :post,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
           body: ActiveSupport::JSON.encode(body),
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
+          verbose: false,
         )
         response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
@@ -46,13 +48,14 @@ module Bobot
 
       def graph_delete(path, query: {}, body: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
-        req = Typhoeus::Request.new(
+        req = ::Typhoeus::Request.new(
           url,
           method: :delete,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
           body: ActiveSupport::JSON.encode(body),
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
+          verbose: false,
         )
         response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
