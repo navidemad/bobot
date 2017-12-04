@@ -18,3 +18,4 @@ spec/dummy/tmp/
 .byebug_history
 /coverage.data
 /coverage/
+dump.rdb
