@@ -6,7 +6,7 @@ module Bobot
     module ClassMethods
       def graph_get(path, query: {})
         uri = URI.parse(File.join(GRAPH_FB_URL, GRAPH_FB_VERSION, path))
-        uri.query = URI.encode_www_form(query)
+        uri.query = URI.encode_www_form(query.reverse_merge(include_headers: false))
         req = Net::HTTP::Get.new(uri.request_uri)
         req['Content-Type'] = 'application/json; charset=utf-8'
         req['Accept'] = 'application/json'
@@ -28,7 +28,7 @@ module Bobot
 
       def graph_post(path, query: {}, body: {})
         uri = URI.parse(File.join(GRAPH_FB_URL, GRAPH_FB_VERSION, path))
-        uri.query = URI.encode_www_form(query)
+        uri.query = URI.encode_www_form(query.reverse_merge(include_headers: false))
         req = Net::HTTP::Post.new(uri.request_uri)
         req['Content-Type'] = 'application/json; charset=utf-8'
         req['Accept'] = 'application/json'
@@ -51,7 +51,7 @@ module Bobot
 
       def graph_delete(path, query: {}, body: {})
         uri = URI.parse(File.join(GRAPH_FB_URL, GRAPH_FB_VERSION, path))
-        uri.query = URI.encode_www_form(query)
+        uri.query = URI.encode_www_form(query.reverse_merge(include_headers: false))
         req = Net::HTTP::Delete.new(uri.request_uri)
         req['Content-Type'] = 'application/json; charset=utf-8'
         req['Accept'] = 'application/json'
