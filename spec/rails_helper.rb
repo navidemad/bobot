@@ -62,4 +62,7 @@ RSpec.configure do |config|
       c.pages = []
     end
   end
+  config.before :each do
+    Typhoeus::Expectation.clear
+  end
 end

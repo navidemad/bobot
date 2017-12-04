@@ -8,9 +8,8 @@ RSpec.describe Bobot::Subscription do
   let(:subscription_url) do
     File.join(
       described_class::GRAPH_FB_URL,
-      described_class::GRAPH_FB_VERSION,
       "/#{page_id}",
-      '/subscribed_apps',
+      '/subscribed_apps?include_headers=false',
     )
   end
 

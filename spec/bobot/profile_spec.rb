@@ -7,8 +7,7 @@ RSpec.describe Bobot::Profile do
   let(:messenger_profile_url) do
     File.join(
       described_class::GRAPH_FB_URL,
-      described_class::GRAPH_FB_VERSION,
-      '/me/messenger_profile'
+      '/me/messenger_profile?include_headers=false'
     )
   end
 

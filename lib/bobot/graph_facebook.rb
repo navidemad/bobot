@@ -1,25 +1,24 @@
+require "Typhoeus"
+require "uri"
+
 module Bobot
   module GraphFacebook
-    GRAPH_FB_URL = 'https://graph.facebook.com'.freeze
-    GRAPH_FB_VERSION = 'v2.11'.freeze
+    GRAPH_FB_URL = 'https://graph.facebook.com/v2.11/'.freeze
+    GRAPH_HEADERS = { Accept: "application/json", "Content-Type" => "application/json; charset=utf-8" }.freeze
 
     module ClassMethods
       def graph_get(path, query: {})
-        uri = URI.parse(File.join(GRAPH_FB_URL, GRAPH_FB_VERSION, path))
-        uri.query = URI.encode_www_form(query.reverse_merge(include_headers: false))
-        req = Net::HTTP::Get.new(uri.request_uri)
-        req['Content-Type'] = 'application/json; charset=utf-8'
-        req['Accept'] = 'application/json'
-        req['User-Agent'] = nil
-        req['Accept-Encoding'] = nil
-        https = Net::HTTP.new(uri.host, uri.port).tap do |http|
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          http.read_timeout = 300
-        end
-        res = https.request(req)
-        json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        Rails.logger.debug "[GET] >> #{uri.request_uri}"
+        url = "#{GRAPH_FB_URL}#{path}".freeze
+        req = Typhoeus::Request.new(
+          url,
+          method: :get,
+          params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
+          headers: GRAPH_HEADERS,
+          ssl_verifypeer: false,
+        ).run
+        response = req.run
+        json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
+        Rails.logger.debug "[GET] >> #{url}"
         Rails.logger.debug "[GET] << #{json}"
         Bobot::ErrorParser.raise_errors_from(json)
         json
@@ -27,22 +26,18 @@ module Bobot
       module_function :graph_get
 
       def graph_post(path, query: {}, body: {})
-        uri = URI.parse(File.join(GRAPH_FB_URL, GRAPH_FB_VERSION, path))
-        uri.query = URI.encode_www_form(query.reverse_merge(include_headers: false))
-        req = Net::HTTP::Post.new(uri.request_uri)
-        req['Content-Type'] = 'application/json; charset=utf-8'
-        req['Accept'] = 'application/json'
-        req['User-Agent'] = nil
-        req['Accept-Encoding'] = nil
-        req.body = ActiveSupport::JSON.encode(body)
-        https = Net::HTTP.new(uri.host, uri.port).tap do |http|
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          http.read_timeout = 300
-        end
-        res = https.request(req)
-        json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        Rails.logger.debug "[POST] >> #{uri.request_uri}"
+        url = "#{GRAPH_FB_URL}#{path}".freeze
+        req = Typhoeus::Request.new(
+          url,
+          method: :post,
+          params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
+          body: ActiveSupport::JSON.encode(body),
+          headers: GRAPH_HEADERS,
+          ssl_verifypeer: false,
+        )
+        response = req.run
+        json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
+        Rails.logger.debug "[POST] >> #{url}"
         Rails.logger.debug "[POST] << #{json}"
         Bobot::ErrorParser.raise_errors_from(json)
         json
@@ -50,22 +45,18 @@ module Bobot
       module_function :graph_post
 
       def graph_delete(path, query: {}, body: {})
-        uri = URI.parse(File.join(GRAPH_FB_URL, GRAPH_FB_VERSION, path))
-        uri.query = URI.encode_www_form(query.reverse_merge(include_headers: false))
-        req = Net::HTTP::Delete.new(uri.request_uri)
-        req['Content-Type'] = 'application/json; charset=utf-8'
-        req['Accept'] = 'application/json'
-        req['User-Agent'] = nil
-        req['Accept-Encoding'] = nil
-        req.body = ActiveSupport::JSON.encode(body)
-        https = Net::HTTP.new(uri.host, uri.port).tap do |http|
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          http.read_timeout = 300
-        end
-        res = https.request(req)
-        json = ActiveSupport::JSON.decode(res.send(:body) || '{}')
-        Rails.logger.debug "[DELETE] >> #{uri.request_uri}"
+        url = "#{GRAPH_FB_URL}#{path}".freeze
+        req = Typhoeus::Request.new(
+          url,
+          method: :delete,
+          params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
+          body: ActiveSupport::JSON.encode(body),
+          headers: GRAPH_HEADERS,
+          ssl_verifypeer: false,
+        )
+        response = req.run
+        json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
+        Rails.logger.debug "[DELETE] >> #{url}"
         Rails.logger.debug "[DELETE] << #{json}"
         Bobot::ErrorParser.raise_errors_from(json)
         json

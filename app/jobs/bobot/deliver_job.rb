@@ -1,6 +1,5 @@
 module Bobot
   class DeliverJob < ApplicationJob
-    
     queue_as do
       if Bobot.config.commander_queue_name.present?
         Bobot.config.commander_queue_name

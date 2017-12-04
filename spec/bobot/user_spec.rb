@@ -10,8 +10,7 @@ RSpec.describe Bobot::User do
   let(:user_url) do
     File.join(
       described_class::GRAPH_FB_URL,
-      described_class::GRAPH_FB_VERSION,
-      "/#{fb_id}"
+      "/#{fb_id}?include_headers=false"
     )
   end
 

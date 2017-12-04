@@ -1,6 +1,3 @@
-require 'net/https'
-require 'uri'
-
 require 'bobot/engine'
 require 'bobot/exceptions'
 require 'bobot/error_parser'
