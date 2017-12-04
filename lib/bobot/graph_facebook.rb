@@ -16,7 +16,7 @@ module Bobot
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
           verbose: false,
-        ).run
+        )
         response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
         Rails.logger.debug "[GET] >> #{url}"
