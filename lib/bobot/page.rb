@@ -36,12 +36,14 @@ module Bobot
 
     def deliver(payload_template:, to:)
       raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
-      job = Bobot::DeliverJob
-      if Bobot.config.async
-        job.perform_later(target_facebook_uid: to, access_token: page_access_token, payload_template: payload_template)
-      else
-        job.perform_now(target_facebook_uid: to, access_token: page_access_token, payload_template: payload_template)
-      end
+      Bobot::Commander.deliver(
+        body: {
+          recipient: { id: to },
+        }.merge(payload_template),
+        query: {
+          access_token: page_access_token,
+        },
+      )
     end
 
     def sender_action(sender_action:, to: nil)

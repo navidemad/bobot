@@ -29,8 +29,8 @@ module Bobot
 
     def receive
       check_integrity
-      return_json = trigger(parsed_body)
-      render plain: ActiveSupport::JSON.encode(return_json), status: :ok
+      trigger(parsed_body)
+      head :ok
     rescue BadRequestError => error
       render plain: error.message, status: :ok
     end

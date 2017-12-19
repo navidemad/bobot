@@ -24,37 +24,26 @@ module Bobot
       end
 
       def on(event, &block)
-        unless EVENTS.include? event
-          raise Error.new("#{event} is not a valid event; available events are #{EVENTS.join(',')}")
+        if EVENTS.include? event
+          hooks[event] = block
+        else
+          warn "[bobot trigger] Ignoring #{event.class} (not available in [#{EVENTS.join(', ')}])"
         end
-        hooks[event] = block
       end
 
       def receive(payload)
-        event = Bobot::Event.parse(payload)
-        hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        Rails.logger.debug "[ActiveJob] << Bobot::HookJob with event #{event.class}"
-        # event.mark_as_seen
-        job = Bobot::CommanderJob
-        if Bobot.config.async
-          job.perform_later(payload: payload)
-        else
-          job.perform_now(payload: payload)
-        end
-      rescue KeyError
-        warn "[receive] Ignoring #{event.class} (no hook registered)"
+        Bobot::CommanderJob.send(
+          Bobot.config.async ? :perform_later : :perform_now,
+          { payload: payload }
+        )
       end
 
       def trigger(payload)
         event = Bobot::Event.parse(payload)
         hook = hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        Rails.logger.debug "[ActiveJob] >> Bobot::HookJob related to event #{name.class}"
-        # event.show_typing(state: true)
         hook.call(event)
-        # event.show_typing(state: false)
-        event
       rescue KeyError
-        warn "[trigger] Ignoring #{event.class} (no hook registered)"
+        warn "[bobot trigger] Ignoring #{event.class} (no hook registered)"
       end
 
       def hooks

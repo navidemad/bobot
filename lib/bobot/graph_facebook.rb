@@ -9,15 +9,12 @@ module Bobot
     module ClassMethods
       def graph_get(path, query: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
-        req = ::Typhoeus::Request.new(
+        response = ::Typhoeus::Request.get(
           url,
-          method: :get,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
-          verbose: false,
         )
-        response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
         Rails.logger.debug "[GET] >> #{url}"
         Rails.logger.debug "[GET] << #{json}"
@@ -28,16 +25,13 @@ module Bobot
 
       def graph_post(path, query: {}, body: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
-        req = ::Typhoeus::Request.new(
+        response = ::Typhoeus::Request.post(
           url,
-          method: :post,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
           body: ActiveSupport::JSON.encode(body),
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
-          verbose: false,
         )
-        response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
         Rails.logger.debug "[POST] >> #{url}"
         Rails.logger.debug "[POST] << #{json}"
@@ -48,16 +42,13 @@ module Bobot
 
       def graph_delete(path, query: {}, body: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
-        req = ::Typhoeus::Request.new(
+        response = ::Typhoeus::Request.delete(
           url,
-          method: :delete,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
           body: ActiveSupport::JSON.encode(body),
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
-          verbose: false,
         )
-        response = req.run
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
         Rails.logger.debug "[DELETE] >> #{url}"
         Rails.logger.debug "[DELETE] << #{json}"
