@@ -71,7 +71,7 @@ module Bobot
       }
     end
 
-    def self.share_custom(title:, subtitle:, image_url:, web_url:, button_title:, image_aspect_ratio:)
+    def self.share_custom(title:, subtitle:, image_url:, web_url:, button_title:, image_aspect_ratio: "square")
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
       raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
       raise Bobot::FieldFormat.new('subtitle is required.') unless subtitle.present?
