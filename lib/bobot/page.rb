@@ -220,6 +220,9 @@ module Bobot
         greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
       end
       if greeting_texts.present?
+        greeting_texts.each do |greating_text|
+          raise Bobot::FieldFormat.new('greeting text for locale #{greating_text[:locale]} is limited to 160.') if greating_text[:text].size > 160
+        end        
         Bobot::Profile.set(
           body: { greeting: greeting_texts },
           query: { access_token: page_access_token },
