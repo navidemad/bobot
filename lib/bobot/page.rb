@@ -221,8 +221,10 @@ module Bobot
       end
       if greeting_texts.present?
         greeting_texts.each do |greating_text|
-          raise Bobot::FieldFormat.new('greeting text for locale #{greating_text[:locale]} is limited to 160.') if greating_text[:text].size > 160
-        end        
+          if greeting_text[:text].present? && greating_text[:text].size > 160
+            raise Bobot::FieldFormat.new('greeting text for locale #{greating_text[:locale]} is limited to 160.', greeting_text[:text]) 
+          end
+        end
         Bobot::Profile.set(
           body: { greeting: greeting_texts },
           query: { access_token: page_access_token },
@@ -318,6 +320,11 @@ module Bobot
         end
       end
       if persistent_menus.present?
+        persistent_menus.each do |persistent_menu|
+          if persistent_menu[:title].present? && persistent_menu[:title].size > 30
+            raise Bobot::FieldFormat.new('persistent menu text for locale #{persistent_menu[:locale]} is limited to 30.', persistent_menu[:title])
+          end
+        end
         Bobot::Profile.set(
           body: { persistent_menu: persistent_menus },
           query: { access_token: page_access_token },
