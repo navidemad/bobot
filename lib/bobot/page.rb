@@ -220,7 +220,6 @@ module Bobot
         greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
       end
       if greeting_texts.present?
-        byebug
         greeting_texts.each do |greeting_text|
           if greeting_text[:text].present? && greeting_text[:text].size > 160
             raise Bobot::FieldFormat.new('greeting text for locale #{greeting_text[:locale]} is limited to 160.', greeting_text[:text]) 
