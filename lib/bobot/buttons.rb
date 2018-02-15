@@ -13,7 +13,7 @@ module Bobot
 
     def self.postback(title:, payload:)
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
-      raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
+      raise Bobot::FieldFormat.new('title length is limited to 20.', title) if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
       payload = Bobot::Buttons.encode_payload(payload: payload)
       raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
@@ -26,8 +26,8 @@ module Bobot
 
     def self.generic_element(title:, subtitle: nil, image_url: nil, default_action_url: nil, buttons: nil)
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
-      raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
-      raise Bobot::FieldFormat.new('subtitle length is limited to 80.') if subtitle.present? && subtitle.size > 80
+      raise Bobot::FieldFormat.new('title length is limited to 80.', title) if title.size > 80
+      raise Bobot::FieldFormat.new('subtitle length is limited to 80.', subtitle) if subtitle.present? && subtitle.size > 80
       raise Bobot::FieldFormat.new('buttons are limited to 3.') if buttons.present? && buttons.size > 3
       {
         title: title,
@@ -52,7 +52,7 @@ module Bobot
 
     def self.quick_reply_text(title:, payload:, image_url: nil)
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
-      raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
+      raise Bobot::FieldFormat.new('title length is limited to 20.', title) if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
       payload = Bobot::Buttons.encode_payload(payload: payload)
       raise Bobot::FieldFormat.new('payload length is limited to 1000.') if payload.bytesize > 1000
@@ -73,11 +73,11 @@ module Bobot
 
     def self.share_custom(title:, subtitle:, image_url:, web_url:, button_title:, image_aspect_ratio: "square")
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
-      raise Bobot::FieldFormat.new('title length is limited to 80.') if title.size > 80
+      raise Bobot::FieldFormat.new('title length is limited to 80.', title) if title.size > 80
       raise Bobot::FieldFormat.new('subtitle is required.') unless subtitle.present?
-      raise Bobot::FieldFormat.new('subtitle length is limited to 80.') if subtitle.size > 80
+      raise Bobot::FieldFormat.new('subtitle length is limited to 80.', subtitle) if subtitle.size > 80
       raise Bobot::FieldFormat.new('button_title is required.') unless button_title.present?
-      raise Bobot::FieldFormat.new('button_title length is limited to 20.') if button_title.size > 20
+      raise Bobot::FieldFormat.new('button_title length is limited to 20.', button_title) if button_title.size > 20
       {
         type: 'element_share',
         share_contents: {
@@ -131,7 +131,7 @@ module Bobot
 
     def self.url(title:, url:, options: {})
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
-      raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
+      raise Bobot::FieldFormat.new('title length is limited to 20.', title) if title.size > 20
       raise Bobot::FieldFormat.new('url is required.') unless url.present?
       if options.key?(:messenger_extensions) && options[:messenger_extensions] && !url.include?('https')
         raise Bobot::FieldFormat.new('must use url HTTPS protocol if messenger_extensions is true.')
@@ -154,7 +154,7 @@ module Bobot
     REGEX_PHONE_NUMBER = /\A(?:\+)(?:\d{1,3}\s*-?)?\(?(?:\d{3})?\)?[- ]?\d{3}[- ]?\d{4}\z/
     def self.call(title:, payload:)
       raise Bobot::FieldFormat.new('title is required.') unless title.present?
-      raise Bobot::FieldFormat.new('title length is limited to 20.') if title.size > 20
+      raise Bobot::FieldFormat.new('title length is limited to 20.', title) if title.size > 20
       raise Bobot::FieldFormat.new('payload is required.') unless payload.present?
       raise Bobot::FieldFormat.new('payload has to be only a string') unless payload.is_a?(String)
       raise Bobot::FieldFormat.new('payload has to start with a "+" and be a valid phone number') unless REGEX_PHONE_NUMBER =~ payload
