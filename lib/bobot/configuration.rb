@@ -10,7 +10,7 @@ module Bobot
       elsif rhs.is_a?(Array)
         @domains = rhs
       else
-        raise Bobot::InvalidParameter.new(:domains, "should be a string or an array")
+        raise Bobot::FieldFormat.new("domains should be a string or an array")
       end
     end
   end
