@@ -18,7 +18,7 @@ module Bobot
       end
 
       def echo?
-        @messaging['message']['is_echo']
+        @messaging['message']['is_echo'].present?
       end
 
       def attachments

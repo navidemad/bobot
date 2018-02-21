@@ -2,15 +2,9 @@ module Bobot
   # Base Facebook Messenger exception.
   class Error < ::StandardError; end
 
-  class InvalidParameter < ::ArgumentError
-    def initialize(name, description = "")
-      super("invalid value of parameter #{name}#{description.present? ? ": '#{description}'" : ''}")
-    end
-  end
-
   class FieldFormat < ::ArgumentError
-    def initialize(description)
-      super("invalid field value with API limits: #{description}")
+    def initialize(description, value = nil)
+      super("#{description}#{value.present? ? " : #{value}'" : ''}")
     end
   end
 

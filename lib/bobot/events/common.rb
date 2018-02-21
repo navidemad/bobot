@@ -16,6 +16,15 @@ module Bobot
         @messaging['recipient']
       end
 
+      # If the user responds to your message, the appropriate event
+      # (messages, messaging_postbacks, etc.) will be sent to your webhook,
+      # with a prior_message object appended. The prior_message object
+      # includes the source of the message the user is responding to, as well
+      # as the user_ref used for the original message send.
+      def prior_message
+        @messaging['prior_message']
+      end
+
       def sent_at
         Time.zone.at(@messaging['timestamp'] / 1000)
       end

@@ -35,7 +35,7 @@ module Bobot
     #####################################
 
     def deliver(payload_template:, to:)
-      raise Bobot::FieldFormat.new('payload_template is required.') unless payload_template.present?
+      raise Bobot::FieldFormat.new('payload_template is required') unless payload_template.present?
       Bobot::Commander.deliver(
         body: {
           recipient: { id: to },
@@ -63,8 +63,8 @@ module Bobot
     end
 
     def send_text(text:, to: nil)
-      raise Bobot::FieldFormat.new('text is required.') unless text.present?
-      raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
+      raise Bobot::FieldFormat.new('text is required') unless text.present?
+      raise Bobot::FieldFormat.new('text bytesize is limited to 640.', "#{text} (#{text.bytesize} bytes)") if text.bytesize > 640
       send(
         payload_message: {
           text: text,
@@ -74,9 +74,9 @@ module Bobot
     end
 
     def send_attachment(url:, type:, to: nil)
-      raise Bobot::FieldFormat.new('url is required.') unless url.present?
-      raise Bobot::FieldFormat.new('type is required.') unless type.present?
-      raise Bobot::FieldFormat.new('type is invalid, only "image, audio, video, file" are permitted.') unless %w[image audio video file].include?(type)
+      raise Bobot::FieldFormat.new('url is required') unless url.present?
+      raise Bobot::FieldFormat.new('type is required') unless type.present?
+      raise Bobot::FieldFormat.new('type is invalid, only "image, audio, video, file" are permitted.', type) unless %w[image audio video file].include?(type)
       send(
         payload_message: {
           attachment: {
@@ -107,10 +107,10 @@ module Bobot
     end
 
     def send_quick_replies(text:, quick_replies:, to: nil)
-      raise Bobot::FieldFormat.new('text is required.') unless text.present?
-      raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
-      raise Bobot::FieldFormat.new('quick_replies are required.') unless quick_replies.present?
-      raise Bobot::FieldFormat.new('quick_replies are limited to 11.') if quick_replies.size > 11
+      raise Bobot::FieldFormat.new('text is required') unless text.present?
+      raise Bobot::FieldFormat.new('text bytesize is limited to 640.', "#{text} (#{text.bytesize} bytes)") if text.bytesize > 640
+      raise Bobot::FieldFormat.new('quick_replies are required') unless quick_replies.present?
+      raise Bobot::FieldFormat.new('quick_replies are limited to 11.', "#{quick_replies.size} quick replies") if quick_replies.size > 11
       send(
         payload_message: {
           text: text,
@@ -121,10 +121,10 @@ module Bobot
     end
 
     def send_buttons(text:, buttons:, to: nil)
-      raise Bobot::FieldFormat.new('text is required.') unless text.present?
-      raise Bobot::FieldFormat.new('text length is limited to 640.') if text.size > 640
-      raise Bobot::FieldFormat.new('buttons are required.') unless buttons.present?
-      raise Bobot::FieldFormat.new('buttons are limited to 3.') if buttons.size > 3
+      raise Bobot::FieldFormat.new('text is required') unless text.present?
+      raise Bobot::FieldFormat.new('text bytesize is limited to 640.', "#{text} (#{text.bytesize} bytes)") if text.bytesize > 640
+      raise Bobot::FieldFormat.new('buttons are required') unless buttons.present?
+      raise Bobot::FieldFormat.new('buttons are limited to 3', "#{buttons.size} buttons") if buttons.size > 3
       send(
         payload_message: {
           attachment: {
@@ -141,10 +141,10 @@ module Bobot
     end
 
     def send_generic(elements:, image_aspect_ratio: 'square', to: nil)
-      raise Bobot::FieldFormat.new('elements are required.') if elements.nil?
-      raise Bobot::FieldFormat.new('elements are limited to 10.') if elements.size > 10
-      raise Bobot::FieldFormat.new('image_aspect_ratio is required.') if image_aspect_ratio.nil?
-      raise Bobot::FieldFormat.new('image_aspect_ratio is invalid, only "square, horizontal" are permitted.') unless %w[square horizontal].include?(image_aspect_ratio)
+      raise Bobot::FieldFormat.new('elements are required') if elements.nil?
+      raise Bobot::FieldFormat.new('elements are limited to 10.', "#{elements.size} elements") if elements.size > 10
+      raise Bobot::FieldFormat.new('image_aspect_ratio is required') if image_aspect_ratio.nil?
+      raise Bobot::FieldFormat.new('image_aspect_ratio is invalid, only "square, horizontal" are permitted.', image_aspect_ratio) unless %w[square horizontal].include?(image_aspect_ratio)
       send(
         payload_message: {
           attachment: {
@@ -176,8 +176,8 @@ module Bobot
 
     ## == Subcribe your bot to your page ==
     def subscribe_to_facebook_page!
-      raise Bobot::InvalidParameter.new(:page_id)      unless page_id.present?
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Subscription.set(
         query: {
           page_id: page_id,
@@ -188,8 +188,8 @@ module Bobot
 
     ## == Unsubcribe your bot from your page ==
     def unsubscribe_to_facebook_page!
-      raise Bobot::InvalidParameter.new(:page_id)      unless page_id.present?
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Subscription.unset(
         query: {
           page_id: page_id,
@@ -200,7 +200,7 @@ module Bobot
 
     ## == Set bot description (only displayed on first time). ==
     def set_greeting_text!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       greeting_texts = []
       if language.nil?
         # Default text
@@ -221,8 +221,8 @@ module Bobot
       end
       if greeting_texts.present?
         greeting_texts.each do |greeting_text|
-          if greeting_text[:text].present? && greeting_text[:text].size > 160
-            raise Bobot::FieldFormat.new('greeting text for locale #{greeting_text[:locale]} is limited to 160.', greeting_text[:text]) 
+          if greeting_text[:text].present? && greeting_text[:text].bytesize > 160
+            raise Bobot::FieldFormat.new('greeting text for locale #{greeting_text[:locale]} is limited to 160.', "#{greeting_text[:text]} (#{greeting_text[:text].bytesize} bytes)")
           end
         end
         Bobot::Profile.set(
@@ -233,7 +233,7 @@ module Bobot
     end
 
     def unset_greeting_text!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.unset(
         body: { fields: %w[greeting] },
         query: { access_token: page_access_token },
@@ -244,8 +244,8 @@ module Bobot
     ## == Some features like Messenger Extensions and Checkbox Plugin require ==
     ## == a page to specify a domain whitelist. ==
     def set_whitelist_domains!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
-      raise Bobot::InvalidParameter.new(:domains) unless Bobot.config.domains.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      raise Bobot::FieldFormat.new("Bobot.config.domains is required") unless Bobot.config.domains.present?
       Bobot::Profile.set(
         body: { whitelisted_domains: Bobot.config.domains },
         query: { access_token: page_access_token },
@@ -253,7 +253,7 @@ module Bobot
     end
 
     def unset_whitelist_domains!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.unset(
         body: { fields: ["whitelisted_domains"] },
         query: { access_token: page_access_token },
@@ -264,8 +264,8 @@ module Bobot
     ## == the Get Started button. Before doing it you should check to select the ==
     ## == messaging_postbacks field when setting up your webhook. ==
     def set_get_started_button!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
-      raise Bobot::InvalidParameter.new(:get_started_payload) unless get_started_payload.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      raise Bobot::FieldFormat.new("get_started_payload is required") unless get_started_payload.present?
       Bobot::Profile.set(
         body: { get_started: { payload: get_started_payload } },
         query: { access_token: page_access_token },
@@ -273,7 +273,7 @@ module Bobot
     end
 
     def unset_get_started_button!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.unset(
         body: { fields: %w[persistent_menu get_started] },
         query: { access_token: page_access_token },
@@ -284,7 +284,7 @@ module Bobot
     ## == If you want to have a persistent menu, you have to set get_started ==
     ## == button before. ==
     def set_persistent_menu!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       persistent_menus = []
       # Default text
       if language.nil?
@@ -321,8 +321,8 @@ module Bobot
       end
       if persistent_menus.present?
         persistent_menus.each do |persistent_menu|
-          if persistent_menu[:title].present? && persistent_menu[:title].size > 30
-            raise Bobot::FieldFormat.new('persistent menu text for locale #{persistent_menu[:locale]} is limited to 30.', persistent_menu[:title])
+          if persistent_menu[:title].present? && persistent_menu[:title].bytesize > 30
+            raise Bobot::FieldFormat.new('persistent menu text for locale #{persistent_menu[:locale]} is limited to 30.', "#{persistent_menu[:title]} (#{persistent_menu[:title].bytesize} bytes)")
           end
         end
         Bobot::Profile.set(
@@ -333,7 +333,7 @@ module Bobot
     end
 
     def unset_persistent_menu!
-      raise Bobot::InvalidParameter.new(:access_token) unless page_access_token.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.unset(
         body: { fields: ["persistent_menu"] },
         query: { access_token: page_access_token },
