@@ -64,7 +64,7 @@ module Bobot
 
     def send_text(text:, to: nil)
       raise Bobot::FieldFormat.new('text is required') unless text.present?
-      raise Bobot::FieldFormat.new('text bytesize is limited to 640.', "#{text} (#{text.bytesize} bytes)") if text.bytesize > 640
+      raise Bobot::FieldFormat.new('text size is limited to 640.', "#{text} (#{text.size} chars)") if text.size > 640
       send(
         payload_message: {
           text: text,
@@ -108,7 +108,7 @@ module Bobot
 
     def send_quick_replies(text:, quick_replies:, to: nil)
       raise Bobot::FieldFormat.new('text is required') unless text.present?
-      raise Bobot::FieldFormat.new('text bytesize is limited to 640.', "#{text} (#{text.bytesize} bytes)") if text.bytesize > 640
+      raise Bobot::FieldFormat.new('text size is limited to 640.', "#{text} (#{text.size} chars)") if text.size > 640
       raise Bobot::FieldFormat.new('quick_replies are required') unless quick_replies.present?
       raise Bobot::FieldFormat.new('quick_replies are limited to 11.', "#{quick_replies.size} quick replies") if quick_replies.size > 11
       send(
@@ -122,7 +122,7 @@ module Bobot
 
     def send_buttons(text:, buttons:, to: nil)
       raise Bobot::FieldFormat.new('text is required') unless text.present?
-      raise Bobot::FieldFormat.new('text bytesize is limited to 640.', "#{text} (#{text.bytesize} bytes)") if text.bytesize > 640
+      raise Bobot::FieldFormat.new('text size is limited to 640.', "#{text} (#{text.size} chars)") if text.size > 640
       raise Bobot::FieldFormat.new('buttons are required') unless buttons.present?
       raise Bobot::FieldFormat.new('buttons are limited to 3', "#{buttons.size} buttons") if buttons.size > 3
       send(
@@ -221,8 +221,8 @@ module Bobot
       end
       if greeting_texts.present?
         greeting_texts.each do |greeting_text|
-          if greeting_text[:text].present? && greeting_text[:text].bytesize > 160
-            raise Bobot::FieldFormat.new('greeting text for locale #{greeting_text[:locale]} is limited to 160.', "#{greeting_text[:text]} (#{greeting_text[:text].bytesize} bytes)")
+          if greeting_text[:text].present? && greeting_text[:text].size > 160
+            raise Bobot::FieldFormat.new('greeting text for locale #{greeting_text[:locale]} is limited to 160.', "#{greeting_text[:text]} (#{greeting_text[:text].size} chars)")
           end
         end
         Bobot::Profile.set(
@@ -321,8 +321,8 @@ module Bobot
       end
       if persistent_menus.present?
         persistent_menus.each do |persistent_menu|
-          if persistent_menu[:title].present? && persistent_menu[:title].bytesize > 30
-            raise Bobot::FieldFormat.new('persistent menu text for locale #{persistent_menu[:locale]} is limited to 30.', "#{persistent_menu[:title]} (#{persistent_menu[:title].bytesize} bytes)")
+          if persistent_menu[:title].present? && persistent_menu[:title].size > 30
+            raise Bobot::FieldFormat.new('persistent menu text for locale #{persistent_menu[:locale]} is limited to 30.', "#{persistent_menu[:title]} (#{persistent_menu[:title].size} chars)")
           end
         end
         Bobot::Profile.set(
