@@ -110,6 +110,28 @@ RSpec.describe Bobot::Dummy do
     end
   end
 
+  describe '.reply_with_youtube_video' do
+    it 'replies to the sender' do
+      expect(subject.page).to receive(:deliver).with(
+        payload_template: {
+          message: {
+            attachment: {
+              type: 'template',
+              payload: {
+                template_type: "open_graph",
+                elements: [
+                  { url: "https://www.youtube.com/watch?v=kJQP7kiw5Fk" }
+                ],
+              },
+            },
+          },
+        },
+        to: payload['recipient']['id'],
+      )
+      subject.reply_with_youtube_video(url: 'https://www.youtube.com/watch?v=kJQP7kiw5Fk')
+    end
+  end
+
   describe '.reply_with_image' do
     it 'replies to the sender' do
       expect(subject.page).to receive(:deliver).with(

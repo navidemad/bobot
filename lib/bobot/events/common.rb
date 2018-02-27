@@ -49,6 +49,10 @@ module Bobot
         page.send_text(text: text, to: sender["id"])
       end
 
+      def reply_with_youtube_video(url:)
+        page.send_youtube_video(url: url, to: sender["id"])
+      end
+
       def reply_with_attachment(url:, type:)
         page.send_attachment(url: url, type: type, to: sender["id"])
       end

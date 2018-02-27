@@ -34,7 +34,7 @@ module Bobot
       def receive(payload)
         Bobot::CommanderJob.send(
           Bobot.config.async ? :perform_later : :perform_now,
-          { payload: payload }
+          { payload: payload },
         )
       end
 

@@ -90,6 +90,25 @@ module Bobot
       )
     end
 
+    def send_youtube_video(url:, to: nil)
+      raise Bobot::FieldFormat.new('url is required') unless url.present?
+      raise Bobot::FieldFormat.new('url is not valid', url) unless url =~ %r{^(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=)?([\w-]{10,})}
+      send(
+        payload_message: {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "open_graph",
+              elements: [
+                { url: url },
+              ],
+            },
+          },
+        },
+        to: to,
+      )
+    end
+
     def send_image(url:, to: nil)
       send_attachment(url: url, type: 'image', to: to)
     end
@@ -220,9 +239,9 @@ module Bobot
         greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
       end
       if greeting_texts.present?
-        greeting_texts.each do |greeting_text|
-          if greeting_text[:text].present? && greeting_text[:text].size > 160
-            raise Bobot::FieldFormat.new('greeting text for locale #{greeting_text[:locale]} is limited to 160.', "#{greeting_text[:text]} (#{greeting_text[:text].size} chars)")
+        greeting_texts.each do |row|
+          if row[:text].present? && row[:text].size > 160
+            raise Bobot::FieldFormat.new("greeting text for locale #{row[:locale]} is limited to 160.", "#{row[:text]} (#{row[:text].size} chars)")
           end
         end
         Bobot::Profile.set(
@@ -320,9 +339,9 @@ module Bobot
         end
       end
       if persistent_menus.present?
-        persistent_menus.each do |persistent_menu|
-          if persistent_menu[:title].present? && persistent_menu[:title].size > 30
-            raise Bobot::FieldFormat.new('persistent menu text for locale #{persistent_menu[:locale]} is limited to 30.', "#{persistent_menu[:title]} (#{persistent_menu[:title].size} chars)")
+        persistent_menus.each do |row|
+          if row[:title].present? && row[:title].size > 30
+            raise Bobot::FieldFormat.new("persistent menu text for locale #{row[:locale]} is limited to 30.", "#{row[:title]} (#{row[:title].size} chars)")
           end
         end
         Bobot::Profile.set(
