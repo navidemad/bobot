@@ -36,9 +36,12 @@ module Bobot
 
     def deliver(payload_template:, to:)
       raise Bobot::FieldFormat.new('payload_template is required') unless payload_template.present?
+      raise Bobot::FieldFormat.new('payload_template[:messaging_type] is required') unless payload_template.key?(:messaging_type)
+      raise Bobot::FieldFormat.new('payload_template[:messaging_type] is invalid, only "RESPONSE, UPDATE, MESSAGE_TAG" are permitted.', payload_template[:messaging_type]) unless %w[RESPONSE UPDATE MESSAGE_TAG].include?(payload_template[:messaging_type])
       Bobot::Commander.deliver(
         body: {
           recipient: { id: to },
+          messaging_type: "RESPONSE",
         }.merge(payload_template),
         query: {
           access_token: page_access_token,
@@ -46,23 +49,23 @@ module Bobot
       )
     end
 
-    def sender_action(sender_action:, to: nil)
-      deliver(payload_template: { sender_action: sender_action }, to: to)
+    def sender_action(sender_action:, to: nil, messaging_type: "RESPONSE")
+      deliver(payload_template: { sender_action: sender_action, messaging_type: messaging_type }, to: to)
     end
 
-    def show_typing(state:, to: nil)
-      sender_action(sender_action: (state ? 'typing_on' : 'typing_off'), to: to)
+    def show_typing(state:, to: nil, messaging_type: "RESPONSE")
+      sender_action(sender_action: (state ? 'typing_on' : 'typing_off'), messaging_type: messaging_type, to: to)
     end
 
-    def mark_as_seen(to: nil)
-      sender_action(sender_action: 'mark_seen', to: to)
+    def mark_as_seen(to: nil, messaging_type: "RESPONSE")
+      sender_action(sender_action: 'mark_seen', messaging_type: messaging_type, to: to)
     end
 
-    def send(payload_message:, to: nil)
-      deliver(payload_template: { message: payload_message }, to: to)
+    def send(payload_message:, to: nil, messaging_type: "RESPONSE")
+      deliver(payload_template: { message: payload_message, messaging_type: messaging_type }, to: to)
     end
 
-    def send_text(text:, to: nil)
+    def send_text(text:, to: nil, messaging_type: "RESPONSE")
       raise Bobot::FieldFormat.new('text is required') unless text.present?
       raise Bobot::FieldFormat.new('text size is limited to 640.', "#{text} (#{text.size} chars)") if text.size > 640
       send(
@@ -70,10 +73,11 @@ module Bobot
           text: text,
         },
         to: to,
+        messaging_type: messaging_type,
       )
     end
 
-    def send_attachment(url:, type:, to: nil)
+    def send_attachment(url:, type:, to: nil, messaging_type: "RESPONSE")
       raise Bobot::FieldFormat.new('url is required') unless url.present?
       raise Bobot::FieldFormat.new('type is required') unless type.present?
       raise Bobot::FieldFormat.new('type is invalid, only "image, audio, video, file" are permitted.', type) unless %w[image audio video file].include?(type)
@@ -87,10 +91,11 @@ module Bobot
           },
         },
         to: to,
+        messaging_type: messaging_type,
       )
     end
 
-    def send_youtube_video(url:, to: nil)
+    def send_youtube_video(url:, to: nil, messaging_type: "RESPONSE")
       raise Bobot::FieldFormat.new('url is required') unless url.present?
       raise Bobot::FieldFormat.new('url is not valid', url) unless url =~ %r{^(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=)?([\w-]{10,})}
       send(
@@ -106,26 +111,27 @@ module Bobot
           },
         },
         to: to,
+        messaging_type: messaging_type,
       )
     end
 
-    def send_image(url:, to: nil)
-      send_attachment(url: url, type: 'image', to: to)
+    def send_image(url:, to: nil, messaging_type: "RESPONSE")
+      send_attachment(url: url, type: 'image', to: to, messaging_type: messaging_type)
     end
 
-    def send_audio(url:, to: nil)
-      send_attachment(url: url, type: 'audio', to: to)
+    def send_audio(url:, to: nil, messaging_type: "RESPONSE")
+      send_attachment(url: url, type: 'audio', to: to, messaging_type: messaging_type)
     end
 
-    def send_video(url:, to: nil)
-      send_attachment(url: url, type: 'video', to: to)
+    def send_video(url:, to: nil, messaging_type: "RESPONSE")
+      send_attachment(url: url, type: 'video', to: to, messaging_type: messaging_type)
     end
 
-    def send_file(url:, to: nil)
-      send_attachment(url: url, type: 'file', to: to)
+    def send_file(url:, to: nil, messaging_type: "RESPONSE")
+      send_attachment(url: url, type: 'file', to: to, messaging_type: messaging_type)
     end
 
-    def send_quick_replies(text:, quick_replies:, to: nil)
+    def send_quick_replies(text:, quick_replies:, to: nil, messaging_type: "RESPONSE")
       raise Bobot::FieldFormat.new('text is required') unless text.present?
       raise Bobot::FieldFormat.new('text size is limited to 640.', "#{text} (#{text.size} chars)") if text.size > 640
       raise Bobot::FieldFormat.new('quick_replies are required') unless quick_replies.present?
@@ -136,10 +142,11 @@ module Bobot
           quick_replies: quick_replies,
         },
         to: to,
+        messaging_type: messaging_type,
       )
     end
 
-    def send_buttons(text:, buttons:, to: nil)
+    def send_buttons(text:, buttons:, to: nil, messaging_type: "RESPONSE")
       raise Bobot::FieldFormat.new('text is required') unless text.present?
       raise Bobot::FieldFormat.new('text size is limited to 640.', "#{text} (#{text.size} chars)") if text.size > 640
       raise Bobot::FieldFormat.new('buttons are required') unless buttons.present?
@@ -156,10 +163,11 @@ module Bobot
           },
         },
         to: to,
+        messaging_type: messaging_type,
       )
     end
 
-    def send_generic(elements:, image_aspect_ratio: 'square', to: nil)
+    def send_generic(elements:, image_aspect_ratio: 'square', to: nil, messaging_type: "RESPONSE")
       raise Bobot::FieldFormat.new('elements are required') if elements.nil?
       raise Bobot::FieldFormat.new('elements are limited to 10.', "#{elements.size} elements") if elements.size > 10
       raise Bobot::FieldFormat.new('image_aspect_ratio is required') if image_aspect_ratio.nil?
@@ -176,6 +184,7 @@ module Bobot
           },
         },
         to: to,
+        messaging_type: messaging_type,
       )
     end
     alias_method :send_carousel, :send_generic
