@@ -78,7 +78,7 @@ RSpec.describe Bobot::Dummy do
       expect(subject.page).to receive(:deliver).with(
         payload_template: {
           sender_action: 'typing_on',
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -88,7 +88,7 @@ RSpec.describe Bobot::Dummy do
       expect(subject.page).to receive(:deliver).with(
         payload_template: {
           sender_action: 'typing_off',
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -101,7 +101,7 @@ RSpec.describe Bobot::Dummy do
       expect(subject.page).to receive(:deliver).with(
         payload_template: {
           sender_action: 'mark_seen',
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -116,7 +116,7 @@ RSpec.describe Bobot::Dummy do
           message: {
             text: 'Hello, human'
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -139,7 +139,7 @@ RSpec.describe Bobot::Dummy do
               },
             },
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -160,7 +160,7 @@ RSpec.describe Bobot::Dummy do
               },
             },
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -180,7 +180,7 @@ RSpec.describe Bobot::Dummy do
               },
             },
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -200,7 +200,7 @@ RSpec.describe Bobot::Dummy do
               },
             },
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -220,7 +220,7 @@ RSpec.describe Bobot::Dummy do
               },
             },
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -248,7 +248,7 @@ RSpec.describe Bobot::Dummy do
               }
             ]
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -281,7 +281,7 @@ RSpec.describe Bobot::Dummy do
               }
             ]
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
@@ -311,7 +311,7 @@ RSpec.describe Bobot::Dummy do
               }
             }
           },
-          messaging_type: 'MESSAGE',
+          messaging_type: 'RESPONSE',
         },
         to: payload['recipient']['id'],
       )
