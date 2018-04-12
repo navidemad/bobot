@@ -18,7 +18,7 @@ RSpec.describe Bobot::Event::Referral do
     }
   end
 
-  subject { Bobot::Event::Referral.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do

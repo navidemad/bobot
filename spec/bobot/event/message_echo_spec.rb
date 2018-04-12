@@ -124,7 +124,7 @@ RSpec.describe Bobot::Event::MessageEcho do
     }
   end
 
-  subject { Bobot::Event::MessageEcho.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do

@@ -16,7 +16,7 @@ RSpec.describe Bobot::Event::Optin do
     }
   end
 
-  subject { Bobot::Event::Optin.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do

@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'helpers/graph_api_helpers'
 
 RSpec.describe Bobot::Event::AccountLinking do
   let :payload do
@@ -18,7 +17,7 @@ RSpec.describe Bobot::Event::AccountLinking do
     }
   end
 
-  subject { Bobot::Event::AccountLinking.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do

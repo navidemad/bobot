@@ -17,7 +17,7 @@ RSpec.describe Bobot::Event::Read do
     }
   end
 
-  subject { Bobot::Event::Read.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do

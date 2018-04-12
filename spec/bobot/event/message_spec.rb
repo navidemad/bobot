@@ -124,7 +124,7 @@ RSpec.describe Bobot::Event::Message do
     }
   end
 
-  subject { Bobot::Event::Message.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do
@@ -254,7 +254,7 @@ RSpec.describe Bobot::Event::Message do
       expect(subject.app_id).to eq(payload['message']['app_id'])
     end
   end
-  
+
   describe '.nlp' do
     it 'returns the nlp from which the message was sent' do
       expect(subject.nlp).to eq(payload['message']['nlp'])

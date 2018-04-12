@@ -21,7 +21,7 @@ RSpec.describe Bobot::Event::Postback do
     }
   end
 
-  subject { Bobot::Event::Postback.new(payload) }
+  subject { described_class.new(payload) }
 
   describe '.messaging' do
     it 'returns the original payload' do
