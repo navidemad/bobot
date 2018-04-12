@@ -7,6 +7,7 @@ require 'bobot/events/optin'
 require 'bobot/events/read'
 require 'bobot/events/account_linking'
 require 'bobot/events/referral'
+require 'bobot/events/policy_enforcement'
 
 module Bobot
   module Event
@@ -19,6 +20,7 @@ module Bobot
       'account_linking' => AccountLinking,
       'referral' => Referral,
       'message_echo' => MessageEcho,
+      'policy-enforcement' => PolicyEnforcement,
     }.freeze
 
     def self.parse(payload)

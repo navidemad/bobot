@@ -12,6 +12,7 @@ module Bobot
       referral
       message_echo
       message_request
+      policy-enforcement
     ].freeze
 
     include Bobot::GraphFacebook

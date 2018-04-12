@@ -278,5 +278,23 @@
   </p>
 </details>
 
+#### Handle a Facebook Policy Violation
+
+<details>
+  <summary>See Facebook's documentation on [Messaging Policy Enforcement](https://developers.facebook.com/docs/messenger-platform/reference/webhook-events/messaging_policy_enforcement)</summary>
+  <p>
+
+  ```ruby
+  Bobot::Commander.on :'policy-enforcement' do |referral|
+    # => 'block'
+    referral.action
+    # => "The bot violated our Platform Policies (https://developers.facebook.com/policy/#messengerplatform). Common violations include sending out excessive spammy messages or being non-functional."
+    referral.reason
+  end
+  ```
+
+  </p>
+</details>
+
 [message-documentation]: https://developers.facebook.com/docs/messenger-platform/send-api-reference#request
 [send-to-messenger-plugin]: https://developers.facebook.com/docs/messenger-platform/plugin-reference
