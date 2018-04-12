@@ -56,7 +56,7 @@ module Bobot
     end
 
     def signature_for(string)
-      format('sha1=%s'.freeze, generate_hmac(string))
+      format('sha1=%<sha1>s'.freeze, sha1: generate_hmac(string))
     end
 
     def signature

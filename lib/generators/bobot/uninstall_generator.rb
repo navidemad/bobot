@@ -1,12 +1,12 @@
 require 'rails/generators'
-require File.expand_path('../utils', __FILE__)
+require File.expand_path('utils', __dir__)
 
 module Bobot
   class UninstallGenerator < Rails::Generators::Base
     include Rails::Generators::Migration
     include Generators::Utils::InstanceMethods
     extend Generators::Utils::ClassMethods
-    source_root File.expand_path('../templates', __FILE__)
+    source_root File.expand_path('templates', __dir__)
 
     desc 'Bobot uninstall'
 

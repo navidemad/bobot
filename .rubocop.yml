@@ -1,5 +1,6 @@
 AllCops:
   DisplayCopNames: true
+  TargetRubyVersion: 2.3.1
   Exclude:
     - 'spec/dummy/**/*'
     - '**/*_spec.rb'
@@ -12,23 +13,26 @@ AllCops:
 Metrics/AbcSize:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Metrics/BlockNesting:
   Max: 3
 
 Metrics/BlockLength:
   Max: 30
 
-Lint/RescueWithoutErrorClass:
+Style/RescueStandardError:
   Enabled: false
-  
+
 Lint/DuplicateMethods:
   Enabled: false
-  
+
 Layout/AlignArray:
-  Enabled: false  
+  Enabled: false
 
 Metrics/ClassLength:
-  Enabled: false  
+  Enabled: false
 
 Metrics/CyclomaticComplexity:
   Enabled: false
@@ -56,7 +60,7 @@ Layout/AccessModifierIndentation:
 
 Style/Alias:
   Enabled: false
-  
+
 Style/GuardClause:
   Enabled: false
 
@@ -94,7 +98,10 @@ Style/RaiseArgs:
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: 'comma'
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: 'comma'
+
+Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: 'comma'
 
 Style/BracesAroundHashParameters:
