@@ -33,6 +33,9 @@ module Bobot
       end
 
       def receive(payload)
+        event = Bobot::Event.parse(payload)
+        hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
+        event.mark_as_seen
         Bobot::CommanderJob.send(
           Bobot.config.async ? :perform_later : :perform_now,
           { payload: payload },
