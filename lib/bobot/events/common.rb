@@ -29,60 +29,60 @@ module Bobot
         Time.zone.at(@messaging['timestamp'] / 1000)
       end
 
-      def sender_action(sender_action:, messaging_type: "RESPONSE")
-        page.sender_action(sender_action: sender_action, to: sender["id"], messaging_type: messaging_type)
+      def sender_action(sender_action:, messaging_options: nil)
+        page.sender_action(sender_action: sender_action, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def show_typing(state:, messaging_type: "RESPONSE")
-        page.show_typing(state: state, to: sender["id"], messaging_type: messaging_type)
+      def show_typing(state:, messaging_options: nil)
+        page.show_typing(state: state, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def mark_as_seen(messaging_type: "RESPONSE")
-        page.mark_as_seen(to: sender["id"], messaging_type: messaging_type)
+      def mark_as_seen(messaging_options: nil)
+        page.mark_as_seen(to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply(payload_message:, messaging_type: "RESPONSE")
-        page.send(payload_message: payload_message, to: sender["id"], messaging_type: messaging_type)
+      def reply(payload_message:, messaging_options: nil)
+        page.send(payload_message: payload_message, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_text(text:, messaging_type: "RESPONSE")
-        page.send_text(text: text, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_text(text:, messaging_options: nil)
+        page.send_text(text: text, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_youtube_video(url:, messaging_type: "RESPONSE")
-        page.send_youtube_video(url: url, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_youtube_video(url:, messaging_options: nil)
+        page.send_youtube_video(url: url, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_attachment(url:, type:, messaging_type: "RESPONSE")
-        page.send_attachment(url: url, type: type, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_attachment(url:, type:, messaging_options: nil)
+        page.send_attachment(url: url, type: type, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_image(url:, messaging_type: "RESPONSE")
-        page.send_image(url: url, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_image(url:, messaging_options: nil)
+        page.send_image(url: url, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_audio(url:, messaging_type: "RESPONSE")
-        page.send_audio(url: url, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_audio(url:, messaging_options: nil)
+        page.send_audio(url: url, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_video(url:, messaging_type: "RESPONSE")
-        page.send_video(url: url, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_video(url:, messaging_options: nil)
+        page.send_video(url: url, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_file(url:, messaging_type: "RESPONSE")
-        page.send_file(url: url, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_file(url:, messaging_options: nil)
+        page.send_file(url: url, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_quick_replies(text:, quick_replies:, messaging_type: "RESPONSE")
-        page.send_quick_replies(text: text, quick_replies: quick_replies, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_quick_replies(text:, quick_replies:, messaging_options: nil)
+        page.send_quick_replies(text: text, quick_replies: quick_replies, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_buttons(text:, buttons:, messaging_type: "RESPONSE")
-        page.send_buttons(text: text, buttons: buttons, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_buttons(text:, buttons:, messaging_options: nil)
+        page.send_buttons(text: text, buttons: buttons, to: sender["id"], messaging_options: messaging_options)
       end
 
-      def reply_with_generic(elements:, image_aspect_ratio: 'square', messaging_type: "RESPONSE")
-        page.send_generic(elements: elements, image_aspect_ratio: image_aspect_ratio, to: sender["id"], messaging_type: messaging_type)
+      def reply_with_generic(elements:, image_aspect_ratio: 'square', messaging_options: nil)
+        page.send_generic(elements: elements, image_aspect_ratio: image_aspect_ratio, to: sender["id"], messaging_options: messaging_options)
       end
       alias_method :reply_with_carousel, :reply_with_generic
 
