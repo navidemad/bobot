@@ -200,35 +200,54 @@ module Bobot
     #
     #####################################
     def update_facebook_setup!
-      subscribe_to_facebook_page!
-      set_greeting_text!
+      puts "- unset_whitelist_domains! [....]"
+      unset_whitelist_domains!
+      puts "- unset_whitelist_domains! [DONE]"
+      puts "- set_whitelist_domains! [....]"
       set_whitelist_domains!
+      puts "- set_whitelist_domains! [DONE]"
+      puts "- unset_greeting_text! [....]"
+      unset_greeting_text!
+      puts "- unset_greeting_text! [DONE]"
+      puts "- set_greeting_text! [....]"
+      set_greeting_text!
+      puts "- set_greeting_text! [DONE]"
+      puts "- unset_get_started_button! [....]"
+      unset_get_started_button!
+      puts "- unset_get_started_button! [DONE]"
+      puts "- set_get_started_button! [....]"
       set_get_started_button!
+      puts "- set_get_started_button! [DONE]"
+      puts "- unset_persistent_menu! [....]"
+      unset_persistent_menu!
+      puts "- unset_persistent_menu! [DONE]"
+      puts "- set_persistent_menu! [....]"
       set_persistent_menu!
+      puts "- set_persistent_menu! [DONE]"
+      puts "- unsubscribe_to_facebook_page! [....]"
+      unsubscribe_to_facebook_page!
+      puts "- unsubscribe_to_facebook_page! [DONE]"
+      puts "- subscribe_to_facebook_page! [....]"
+      subscribe_to_facebook_page!
+      puts "- subscribe_to_facebook_page! [DONE]"
     end
 
-    ## == Subcribe your bot to your page ==
-    def subscribe_to_facebook_page!
-      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
-      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
-      Bobot::Subscription.set(
-        query: {
-          page_id: page_id,
-          access_token: page_access_token,
-        },
-      )
-    end
-
-    ## == Unsubcribe your bot from your page ==
-    def unsubscribe_to_facebook_page!
-      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
-      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
-      Bobot::Subscription.unset(
-        query: {
-          page_id: page_id,
-          access_token: page_access_token,
-        },
-      )
+    def get_facebook_setup
+      puts "- get_whitelist_domains [....]"
+      puts get_whitelist_domains.inspect
+      puts "- get_whitelist_domains [DONE]"
+      puts "- get_greeting_text [....]"
+      puts get_greeting_text.inspect
+      puts "- get_greeting_text [DONE]"
+      puts "- get_started_button [....]"
+      puts get_started_button.inspect
+      puts "- get_started_button [DONE]"
+      puts "- get_persistent_menu [....]"
+      puts get_persistent_menu.inspect
+      puts "- get_persistent_menu [DONE]"
+      puts "- subscribed_facebook_pages [....]"
+      puts subscribed_facebook_pages.inspect
+      puts "- subscribed_facebook_pages [DONE]"
     end
 
     ## == Set bot description (only displayed on first time). ==
@@ -273,6 +292,13 @@ module Bobot
       )
     end
 
+    def get_greeting_text
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Profile.get(
+        query: { access_token: page_access_token, fields: %w[greeting] },
+      )
+    end
+
     ## == Set bot whitelist domains (only displayed on first time) ==
     ## == Some features like Messenger Extensions and Checkbox Plugin require ==
     ## == a page to specify a domain whitelist. ==
@@ -288,8 +314,15 @@ module Bobot
     def unset_whitelist_domains!
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.unset(
-        body: { fields: ["whitelisted_domains"] },
+        body: { fields: %w[whitelisted_domains] },
         query: { access_token: page_access_token },
+      )
+    end
+
+    def get_whitelist_domains
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Profile.get(
+        query: { access_token: page_access_token, fields: %w[whitelisted_domains] },
       )
     end
 
@@ -310,6 +343,13 @@ module Bobot
       Bobot::Profile.unset(
         body: { fields: %w[persistent_menu get_started] },
         query: { access_token: page_access_token },
+      )
+    end
+    
+    def get_started_button
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Profile.get(
+        query: { access_token: page_access_token, fields: %w[get_started] },
       )
     end
 
@@ -368,8 +408,49 @@ module Bobot
     def unset_persistent_menu!
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.unset(
-        body: { fields: ["persistent_menu"] },
+        body: { fields: %w[persistent_menu] },
         query: { access_token: page_access_token },
+      )
+    end
+
+    def get_persistent_menu
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Profile.get(
+        query: { access_token: page_access_token, fields: %w[persistent_menu] },
+      )
+    end
+
+    ## == Subcribe your bot to your page ==
+    def subscribe_to_facebook_page!
+      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Subscription.set(
+        query: {
+          page_id: page_id,
+          access_token: page_access_token,
+        },
+      )
+    end
+
+    ## == Unsubcribe your bot from your page ==
+    def unsubscribe_to_facebook_page!
+      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Subscription.unset(
+        query: {
+          page_id: page_id,
+          access_token: page_access_token,
+        },
+      )
+    end
+
+    ## == Subcribed pages for your bot ==
+    def subscribed_facebook_pages
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Subscription.get(
+        query: {
+          access_token: page_access_token,
+        },
       )
     end
   end
