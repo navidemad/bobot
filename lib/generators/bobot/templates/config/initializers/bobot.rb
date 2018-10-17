@@ -9,6 +9,7 @@ if bobot_config.present?
     config.app_id               = bobot_config["app_id"]
     config.app_secret           = bobot_config["app_secret"]
     config.verify_token         = bobot_config["verify_token"]
+    config.skip_code            = bobot_config["skip_code"]
     config.domains              = bobot_config["domains"]
     config.async                = bobot_config["async"]
     config.commander_queue_name = bobot_config["commander_queue_name"]

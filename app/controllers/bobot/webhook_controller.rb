@@ -28,7 +28,7 @@ module Bobot
     end
 
     def receive
-      check_integrity
+      check_integrity unless skip_check_integrity?
       trigger(parsed_body)
       head :ok
     rescue BadRequestError => error
@@ -61,6 +61,10 @@ module Bobot
 
     def signature
       request.headers['HTTP_X_HUB_SIGNATURE'.freeze].to_s
+    end
+
+    def skip_check_integrity?
+      request.params['skip_code'.freeze].to_s == Bobot.config.skip_code
     end
 
     def check_integrity

@@ -7,6 +7,7 @@ RSpec.describe Bobot do
         config.app_id = 'app_id'
         config.app_secret = 'app_secret'
         config.verify_token = 'verify_token'
+        config.skip_code = ''
         config.domains = "   test.ltd,  domain.ltd   "
         config.async = true
         config.pages << Bobot::Page.new(
@@ -20,6 +21,7 @@ RSpec.describe Bobot do
       expect(Bobot.config.app_id).to eql('app_id')
       expect(Bobot.config.app_secret).to eql('app_secret')
       expect(Bobot.config.verify_token).to eql('verify_token')
+      expect(Bobot.config.skip_code).to eq('')
       expect(Bobot.config.domains).to eql(["test.ltd", "domain.ltd"])
       expect(Bobot.config.async).to eql(true)
       expect(Bobot.config.pages[0].slug).to eql('slug')

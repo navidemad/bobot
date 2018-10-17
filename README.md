@@ -20,6 +20,7 @@ gem 'bobot'
         app_id: "123"
         app_secret: "456"
         verify_token: "your token"
+        skip_code: ""
         domains: "whitelisted-domain.com,second-whitelisted-domain.com"
         async: false
         commander_queue_name: "default"
