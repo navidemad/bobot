@@ -204,70 +204,70 @@ module Bobot
         puts "- unset_whitelist_domains! [....]"
         unset_whitelist_domains!
         puts "- unset_whitelist_domains! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- set_whitelist_domains! [....]"
         set_whitelist_domains!
         puts "- set_whitelist_domains! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- unset_greeting_text! [....]"
         unset_greeting_text!
         puts "- unset_greeting_text! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- set_greeting_text! [....]"
         set_greeting_text!
         puts "- set_greeting_text! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- unset_get_started_button! [....]"
         unset_get_started_button!
         puts "- unset_get_started_button! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- set_get_started_button! [....]"
         set_get_started_button!
         puts "- set_get_started_button! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- unset_persistent_menu! [....]"
         unset_persistent_menu!
         puts "- unset_persistent_menu! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- set_persistent_menu! [....]"
         set_persistent_menu!
         puts "- set_persistent_menu! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- unsubscribe_to_facebook_page! [....]"
         unsubscribe_to_facebook_page!
         puts "- unsubscribe_to_facebook_page! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- subscribe_to_facebook_page! [....]"
         subscribe_to_facebook_page!
         puts "- subscribe_to_facebook_page! [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
     end
@@ -277,35 +277,35 @@ module Bobot
         puts "- get_whitelist_domains [....]"
         puts get_whitelist_domains.inspect
         puts "- get_whitelist_domains [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- get_greeting_text [....]"
         puts get_greeting_text.inspect
         puts "- get_greeting_text [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- get_started_button [....]"
         puts get_started_button.inspect
         puts "- get_started_button [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- get_persistent_menu [....]"
         puts get_persistent_menu.inspect
         puts "- get_persistent_menu [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
       begin
         puts "- subscribed_facebook_pages [....]"
         puts subscribed_facebook_pages.inspect
         puts "- subscribed_facebook_pages [DONE]"
-      rescue e
+      rescue => e
         Rails.logger.error(e.message)
       end
     end
