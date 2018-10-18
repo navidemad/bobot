@@ -3,7 +3,7 @@ require "uri"
 
 module Bobot
   module GraphFacebook
-    GRAPH_FB_URL = 'https://graph.facebook.com/v2.11'.freeze
+    GRAPH_FB_URL = 'https://graph.facebook.com/v3.1'.freeze
     GRAPH_HEADERS = { Accept: "application/json", "Content-Type" => "application/json; charset=utf-8" }.freeze
 
     module ClassMethods
@@ -16,8 +16,10 @@ module Bobot
           ssl_verifypeer: false,
         )
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
-        Rails.logger.debug "[GET] >> #{url}"
-        Rails.logger.debug "[GET] << #{json}"
+        unless Rails.env.production?
+          Rails.logger.debug "[GET] >> #{url}"
+          Rails.logger.debug "[GET] << #{json}"
+        end
         Bobot::ErrorParser.raise_errors_from(json)
         json
       end
@@ -33,8 +35,10 @@ module Bobot
           ssl_verifypeer: false,
         )
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
-        Rails.logger.debug "[POST] >> #{url}"
-        Rails.logger.debug "[POST] << #{json}"
+        unless Rails.env.production?
+          Rails.logger.debug "[POST] >> #{url}"
+          Rails.logger.debug "[POST] << #{json}"
+        end
         Bobot::ErrorParser.raise_errors_from(json)
         json
       end
@@ -50,8 +54,10 @@ module Bobot
           ssl_verifypeer: false,
         )
         json = ActiveSupport::JSON.decode(response.send(:body) || '{}')
-        Rails.logger.debug "[DELETE] >> #{url}"
-        Rails.logger.debug "[DELETE] << #{json}"
+        unless Rails.env.production?
+          Rails.logger.debug "[DELETE] >> #{url}"
+          Rails.logger.debug "[DELETE] << #{json}"
+        end
         Bobot::ErrorParser.raise_errors_from(json)
         json
       end

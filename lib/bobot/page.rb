@@ -314,7 +314,7 @@ module Bobot
     def set_greeting_text!
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       greeting_texts = []
-      if language.nil?
+      if self.language.nil?
         # Default text
         greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: I18n.default_locale, default: nil)
         greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?

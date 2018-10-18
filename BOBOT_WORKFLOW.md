@@ -172,7 +172,7 @@
         title: "Go to aventure",
         subtitle: "You prefer to be dressed with confortable things to move easily",
         image_url: "https://image.fr/confortable-carousel-item.jpg",
-        default_action_url: Bobot::Buttons.default_action_url(
+        default_action: Bobot::Buttons.default_action(
           url: "https://my.app/view?item=42",
           messenger_extensions: true,
           webview_height_ratio: "tall",

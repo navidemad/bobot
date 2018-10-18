@@ -24,7 +24,7 @@ module Bobot
       }
     end
 
-    def self.generic_element(title:, subtitle: nil, image_url: nil, default_action_url: nil, buttons: nil)
+    def self.generic_element(title:, subtitle: nil, image_url: nil, default_action: nil, buttons: nil)
       raise Bobot::FieldFormat.new('title is required') unless title.present?
       raise Bobot::FieldFormat.new('title size is limited to 80', "#{title} (#{title.size} chars)") if title.size > 80
       raise Bobot::FieldFormat.new('subtitle size is limited to 80', "#{subtitle} (#{subtitle.size} chars)") if subtitle.present? && subtitle.size > 80
@@ -34,11 +34,11 @@ module Bobot
       }.tap do |properties|
         properties[:image_url] = image_url if image_url.present?
         properties[:subtitle] = subtitle if subtitle.present?
-        properties[:default_action_url] = default_action_url if default_action_url.present?
+        properties[:default_action] = default_action if default_action.present?
         properties[:buttons] = buttons if buttons.present?
       end
     end
-    class <<self
+    class << self
       alias_method :carousel_element, :generic_element
     end
 
@@ -72,10 +72,6 @@ module Bobot
     end
 
     def self.share_custom(title:, subtitle:, image_url:, web_url:, button_title:, image_aspect_ratio: "square")
-      raise Bobot::FieldFormat.new('title is required') unless title.present?
-      raise Bobot::FieldFormat.new('title size is limited to 80', "#{title} (#{title.size} chars)") if title.size > 80
-      raise Bobot::FieldFormat.new('subtitle is required') unless subtitle.present?
-      raise Bobot::FieldFormat.new('subtitle size is limited to 80', "#{subtitle} (#{subtitle.size} chars)") if subtitle.size > 80
       raise Bobot::FieldFormat.new('button_title is required') unless button_title.present?
       raise Bobot::FieldFormat.new('button_title size is limited to 20', "#{button_title} (#{button_title.size} chars)") if button_title.size > 20
       {
@@ -87,22 +83,13 @@ module Bobot
               template_type: 'generic',
               image_aspect_ratio: image_aspect_ratio,
               elements: [
-                {
+                self.generic_element(
                   title: title,
                   subtitle: subtitle,
                   image_url: image_url,
-                  default_action: {
-                    type: 'web_url',
-                    url: web_url,
-                  },
-                  buttons: [
-                    {
-                      type: 'web_url',
-                      url: web_url,
-                      title: button_title,
-                    },
-                  ],
-                },
+                  default_action: self.default_action(url: web_url),
+                  buttons: [ self.url(title: button_title, url: web_url) ]
+                )
               ],
             },
           },
@@ -110,7 +97,7 @@ module Bobot
       }
     end
 
-    def self.default_action_url(url:, options: {})
+    def self.default_action(url:, options: {})
       raise Bobot::FieldFormat.new('url is required') unless url.present?
       if options.key?(:messenger_extensions) && options[:messenger_extensions] && !url.include?('https')
         raise Bobot::FieldFormat.new('must use url HTTPS protocol if messenger_extensions is true.', url)
