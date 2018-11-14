@@ -481,13 +481,16 @@ module Bobot
     end
 
     ## == Subcribe your bot to your page ==
-    def subscribe_to_facebook_page!
+    def subscribe_to_facebook_page!(subscription_fields: [])
       raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      raise Bobot::FieldFormat.new("subscription_fields is required") if subscription_fields.nil?
+      raise Bobot::FieldFormat.new("subscription_fields has to be an array") unless subscription_fields.is_a?(Array)
       Bobot::Subscription.set(
         query: {
           page_id: page_id,
           access_token: page_access_token,
+          subscription_fields: subscription_fields,
         },
       )
     end
