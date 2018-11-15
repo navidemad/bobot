@@ -40,6 +40,8 @@ module Bobot
           Bobot.config.async ? :perform_later : :perform_now,
           { payload: payload },
         )
+      rescue KeyError
+        warn "[bobot trigger] Ignoring #{event.class} (no hook registered)"
       end
 
       def trigger(payload)
