@@ -256,20 +256,6 @@ module Bobot
       rescue => e
         Rails.logger.error(e.message)
       end
-      begin
-        puts "- unsubscribe_to_facebook_page! [....]"
-        unsubscribe_to_facebook_page!
-        puts "- unsubscribe_to_facebook_page! [DONE]"
-      rescue => e
-        Rails.logger.error(e.message)
-      end
-      begin
-        puts "- subscribe_to_facebook_page! [....]"
-        subscribe_to_facebook_page!
-        puts "- subscribe_to_facebook_page! [DONE]"
-      rescue => e
-        Rails.logger.error(e.message)
-      end
     end
 
     def get_facebook_setup
@@ -298,13 +284,6 @@ module Bobot
         puts "- get_persistent_menu [....]"
         puts get_persistent_menu.inspect
         puts "- get_persistent_menu [DONE]"
-      rescue => e
-        Rails.logger.error(e.message)
-      end
-      begin
-        puts "- subscribed_facebook_pages [....]"
-        puts subscribed_facebook_pages.inspect
-        puts "- subscribed_facebook_pages [DONE]"
       rescue => e
         Rails.logger.error(e.message)
       end
@@ -477,43 +456,6 @@ module Bobot
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.get(
         query: { access_token: page_access_token, fields: %w[persistent_menu] },
-      )
-    end
-
-    ## == Subcribe your bot to your page ==
-    def subscribe_to_facebook_page!(subscription_fields: [])
-      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
-      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
-      raise Bobot::FieldFormat.new("subscription_fields is required") if subscription_fields.nil?
-      raise Bobot::FieldFormat.new("subscription_fields has to be an array") unless subscription_fields.is_a?(Array)
-      Bobot::Subscription.set(
-        query: {
-          page_id: page_id,
-          access_token: page_access_token,
-          subscription_fields: subscription_fields,
-        },
-      )
-    end
-
-    ## == Unsubcribe your bot from your page ==
-    def unsubscribe_to_facebook_page!
-      raise Bobot::FieldFormat.new("page_id is required") unless page_id.present?
-      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
-      Bobot::Subscription.unset(
-        query: {
-          page_id: page_id,
-          access_token: page_access_token,
-        },
-      )
-    end
-
-    ## == Subcribed pages for your bot ==
-    def subscribed_facebook_pages
-      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
-      Bobot::Subscription.get(
-        query: {
-          access_token: page_access_token,
-        },
       )
     end
   end

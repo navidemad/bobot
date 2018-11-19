@@ -82,8 +82,6 @@ gem 'bobot'
     - `page.update_facebook_setup!`
 
     Or one by one in a Rails console:
-    - `page.subscribe_to_facebook_page!`
-    - `page.unsubscribe_to_facebook_page!`
     - `page.unset_greeting_text!`
     - `page.set_greeting_text!`
     - `page.unset_whitelist_domains!`
