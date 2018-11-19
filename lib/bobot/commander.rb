@@ -34,6 +34,8 @@ module Bobot
 
       def receive(payload)
         event = Bobot::Event.parse(payload)
+        return if event.page.present?
+
         hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
         event.mark_as_seen
         Bobot::CommanderJob.send(
@@ -46,6 +48,8 @@ module Bobot
 
       def trigger(payload)
         event = Bobot::Event.parse(payload)
+        return if event.page.present?
+
         hook = hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
         hook.call(event)
       rescue KeyError
