@@ -3,7 +3,7 @@ require "uri"
 
 module Bobot
   module GraphFacebook
-    GRAPH_FB_URL = 'https://graph.facebook.com/v3.1'.freeze
+    GRAPH_FB_URL = 'https://graph.facebook.com/v3.2'.freeze
     GRAPH_HEADERS = { Accept: "application/json", "Content-Type" => "application/json; charset=utf-8" }.freeze
 
     module ClassMethods

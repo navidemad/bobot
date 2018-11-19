@@ -1,6 +1,6 @@
 module Bobot
   class Configuration
-    attr_accessor :app_id, :app_secret, :verify_token, :skip_code, :domains, :async, :commander_queue_name, :pages
+    attr_accessor :app_id, :app_secret, :verify_token, :skip_code, :domains, :async, :commander_queue_name, :url_for_chat_extension, :size_for_chat_extension, :share_button_for_chat_extension, :in_test_for_chat_extension, :pages
 
     def domains=(rhs)
       if rhs.nil?

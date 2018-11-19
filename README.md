@@ -24,6 +24,10 @@ gem 'bobot'
         domains: "whitelisted-domain.com,second-whitelisted-domain.com"
         async: false
         commander_queue_name: "default"
+        url_for_chat_extension: "https://whitelisted-domain.com/messenger_extension"
+        size_for_chat_extension: "tall"
+        share_button_for_chat_extension: "show"
+        in_test_for_chat_extension: "true"
         pages: 
           - slug: "facebook_1"
             language: "fr"
@@ -90,6 +94,8 @@ gem 'bobot'
     - `page.set_get_started_button!`
     - `page.unset_persistent_menu!`
     - `page.set_persistent_menu!`
+    - `page.unset_home_url!`
+    - `page.set_home_url!`
   </p>
 </details>
 

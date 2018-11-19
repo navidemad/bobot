@@ -256,6 +256,22 @@ module Bobot
       rescue => e
         Rails.logger.error(e.message)
       end
+      if Bobot.config.url_for_chat_extension.present?
+        begin
+          puts "- unset_messenger_extensions_home_url! [....]"
+          unset_messenger_extensions_home_url!
+          puts "- unset_messenger_extensions_home_url! [DONE]"
+        rescue => e
+          Rails.logger.error(e.message)
+        end
+        begin
+          puts "- set_messenger_extensions_home_url! [....]"
+          set_messenger_extensions_home_url!
+          puts "- set_messenger_extensions_home_url! [DONE]"
+        rescue => e
+          Rails.logger.error(e.message)
+        end
+      end
     end
 
     def get_facebook_setup
@@ -284,6 +300,13 @@ module Bobot
         puts "- get_persistent_menu [....]"
         puts get_persistent_menu.inspect
         puts "- get_persistent_menu [DONE]"
+      rescue => e
+        Rails.logger.error(e.message)
+      end
+      begin
+        puts "- get_messenger_extensions_home_url [....]"
+        puts get_messenger_extensions_home_url.inspect
+        puts "- get_messenger_extensions_home_url [DONE]"
       rescue => e
         Rails.logger.error(e.message)
       end
@@ -456,6 +479,40 @@ module Bobot
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
       Bobot::Profile.get(
         query: { access_token: page_access_token, fields: %w[persistent_menu] },
+      )
+    end
+
+    ## == Set bot home url ==
+    ## == Allows your bot to enable a Chat Extension in the composer drawer in Messenger. ==
+    ## == It controls what is displayed when the Chat Extension is invoked via the composer drawer in Messenger. ==
+    def set_messenger_extensions_home_url!
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      raise Bobot::FieldFormat.new("Bobot.config.url_for_chat_extension is required") unless Bobot.config.url_for_chat_extension.present?
+      Bobot::Profile.set(
+        body: { 
+            "home_url": {
+              "url": Bobot.config.url_for_chat_extension,
+              "webview_height_ratio": Bobot.config.size_for_chat_extension || "tall",
+              "webview_share_button": Bobot.config.share_button_for_chat_extension || "show",
+              "in_test": Bobot.config.in_test_for_chat_extension || true,
+            }
+        },
+        query: { access_token: page_access_token },
+      )
+    end
+
+    def unset_messenger_extensions_home_url!
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Profile.unset(
+        body: { fields: %w[home_url] },
+        query: { access_token: page_access_token },
+      )
+    end
+
+    def get_messenger_extensions_home_url
+      raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
+      Bobot::Profile.get(
+        query: { access_token: page_access_token, fields: %w[home_url] },
       )
     end
   end
