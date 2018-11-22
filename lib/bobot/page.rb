@@ -318,7 +318,9 @@ module Bobot
       greeting_texts = []
       if self.language.nil?
         # Default text
+        short_slug = slug.gsub(/_\w+$/, "")
         greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: I18n.default_locale, default: nil)
+        greeting_text = I18n.t("bobot.#{short_slug}.config.greeting_text", locale: I18n.default_locale, default: nil) if greeting_text.nil?
         greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
         # Each languages
         I18n.available_locales.each do |locale|
@@ -330,7 +332,9 @@ module Bobot
           end
         end
       else
+        short_slug = slug.gsub(/_#{language}$/, "")
         greeting_text = I18n.t("bobot.#{slug}.config.greeting_text", locale: language, default: nil)
+        greeting_text = I18n.t("bobot.#{short_slug}.config.greeting_text", locale: language, default: nil) if greeting_text.nil?
         greeting_texts << { locale: 'default', text: greeting_text } if greeting_text.present?
       end
       if greeting_texts.present?
@@ -423,7 +427,9 @@ module Bobot
       persistent_menus = []
       # Default text
       if language.nil?
+        short_slug = slug.gsub(/_\w+$/, "")
         persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: I18n.default_locale, default: nil)
+        persistent_menu = I18n.t("bobot.#{short_slug}.config.persistent_menu", locale: I18n.default_locale, default: nil) if persistent_menu.nil?
         if persistent_menu.present?
           persistent_menus << {
             locale: 'default',
@@ -434,7 +440,9 @@ module Bobot
         # Each languages
         I18n.available_locales.each do |locale|
           persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: locale, default: nil)
+          persistent_menu = I18n.t("bobot.#{short_slug}.config.persistent_menu", locale: locale, default: nil) if persistent_menu.nil?
           facebook_locales = I18n.t("bobot.#{slug}.config.facebook_locales", locale: locale, default: nil)
+          facebook_locales = I18n.t("bobot.#{short_slug}.config.facebook_locales", locale: locale, default: nil) if facebook_locales.nil?
           next unless persistent_menu.present?
           facebook_locales.to_a.each do |locale_long|
             persistent_menus << {
@@ -445,7 +453,9 @@ module Bobot
           end
         end
       else
+        short_slug = slug.gsub(/_#{language}$/, "")
         persistent_menu = I18n.t("bobot.#{slug}.config.persistent_menu", locale: language, default: nil)
+        persistent_menu = I18n.t("bobot.#{short_slug}.config.persistent_menu", locale: language, default: nil) if persistent_menu.nil?
         if persistent_menu.present?
           persistent_menus << {
             locale: 'default',
