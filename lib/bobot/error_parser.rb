@@ -35,13 +35,15 @@ module Bobot
       # response - A HTTParty::Response object.
       #
       # Returns nil if no errors were found, otherwises raises appropriately
-      def raise_errors_from(response)
+      def raise_errors_from(response, extras = {})
         return false unless response.key?('error')
 
         error = response['error']
 
         error_code = error['code']
         error_subcode = error['error_subcode']
+
+        error['extras'] = extras
 
         raise_code_only_error(error_code, error) if error_subcode.nil?
 

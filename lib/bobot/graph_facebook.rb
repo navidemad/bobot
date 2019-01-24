@@ -27,10 +27,11 @@ module Bobot
 
       def graph_post(path, query: {}, body: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
+        graph_body = ActiveSupport::JSON.encode(body)
         response = ::Typhoeus::Request.post(
           url,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
-          body: ActiveSupport::JSON.encode(body),
+          body: graph_body,
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
         )
@@ -39,17 +40,18 @@ module Bobot
           Rails.logger.debug "[POST] >> #{url}"
           Rails.logger.debug "[POST] << #{json}"
         end
-        Bobot::ErrorParser.raise_errors_from(json)
+        Bobot::ErrorParser.raise_errors_from(json, graph_body)
         json
       end
       module_function :graph_post
 
       def graph_delete(path, query: {}, body: {})
         url = "#{GRAPH_FB_URL}#{path}".freeze
+        graph_body = ActiveSupport::JSON.encode(body)
         response = ::Typhoeus::Request.delete(
           url,
           params: URI.encode_www_form(query.reverse_merge(include_headers: false)),
-          body: ActiveSupport::JSON.encode(body),
+          body: graph_body,
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
         )
@@ -58,7 +60,7 @@ module Bobot
           Rails.logger.debug "[DELETE] >> #{url}"
           Rails.logger.debug "[DELETE] << #{json}"
         end
-        Bobot::ErrorParser.raise_errors_from(json)
+        Bobot::ErrorParser.raise_errors_from(json, graph_body)
         json
       end
       module_function :graph_delete

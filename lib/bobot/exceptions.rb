@@ -20,6 +20,7 @@ module Bobot
     attr_reader :user_title
     attr_reader :user_msg
     attr_reader :fbtrace_id
+    attr_reader :extras
 
     def initialize(error)
       @message = error['message']
@@ -29,6 +30,7 @@ module Bobot
       @user_title = error['error_user_title']
       @user_msg = error['error_user_msg']
       @fbtrace_id = error['fbtrace_id']
+      @extras = error['extras']
     end
 
     def to_s
