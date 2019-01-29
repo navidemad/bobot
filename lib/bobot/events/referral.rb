@@ -19,6 +19,10 @@ module Bobot
         def type
           @referral['type']
         end
+
+        def ad_id
+          @referral['ad_id'] if @referral.key?('ad_id')
+        end
       end
 
       def referral

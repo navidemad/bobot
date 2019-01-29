@@ -15,7 +15,8 @@ RSpec.describe Bobot::Event::Postback do
         'referral' => {
           'ref' => 'my-ref-value',
           'source' => 'SHORTLINK',
-          'type' => 'OPEN_THREAD'
+          'type' => 'OPEN_THREAD',
+          'ad_id' => 'ad-id'
         }
       }
     }
@@ -50,6 +51,12 @@ RSpec.describe Bobot::Event::Postback do
   describe '.payload' do
     it 'returns the payload of the postback' do
       expect(subject.payload).to eq(payload['postback']['payload'])
+    end
+  end
+
+  describe '.ad_id' do
+    it 'returns the ad_id value' do
+      expect(subject.referral.ad_id).to eq(payload['referral']['ad_id'])
     end
   end
 
