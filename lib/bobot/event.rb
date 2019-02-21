@@ -8,6 +8,7 @@ require 'bobot/events/read'
 require 'bobot/events/account_linking'
 require 'bobot/events/referral'
 require 'bobot/events/policy_enforcement'
+require 'bobot/events/pass_thread_control'
 
 module Bobot
   module Event
