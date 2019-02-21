@@ -21,6 +21,7 @@ module Bobot
       'referral' => Referral,
       'message_echo' => MessageEcho,
       'policy-enforcement' => PolicyEnforcement,
+      'pass_thread_control' => PassThreadControl,
     }.freeze
 
     def self.parse(payload)

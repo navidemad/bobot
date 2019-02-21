@@ -13,6 +13,7 @@ module Bobot
       message_echo
       message_request
       policy-enforcement
+      pass_thread_control
     ].freeze
 
     include Bobot::GraphFacebook
