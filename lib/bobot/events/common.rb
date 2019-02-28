@@ -9,11 +9,11 @@ module Bobot
       end
 
       def sender
-        @messaging['sender']
+        @messaging[is_a?(Bobot::Event::MessageEcho) ? 'recipient' : 'sender']
       end
 
       def recipient
-        @messaging['recipient']
+        @messaging[is_a?(Bobot::Event::MessageEcho) ? 'sender' : 'recipient']
       end
 
       # If the user responds to your message, the appropriate event
@@ -27,6 +27,14 @@ module Bobot
 
       def sent_at
         Time.zone.at(@messaging['timestamp'] / 1000)
+      end
+
+      def send_take_thread_control(metadata: nil)
+        page.deliver_take_thread_control(to: sender["id"], metadata: metadata)
+      end
+
+      def send_pass_thread_control(target_app_id:, metadata: nil)
+        page.deliver_pass_thread_control(to: sender["id"], metadata: metadata, target_app_id: target_app_id)
       end
 
       def sender_action(sender_action:, messaging_options: nil)

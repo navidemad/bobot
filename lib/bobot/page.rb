@@ -34,6 +34,26 @@ module Bobot
     #
     #####################################
 
+    def deliver_take_thread_control(to:, metadata: nil)
+      body = { recipient: { id: to }, metadata: metadata }
+      query = { access_token: page_access_token }
+      Bobot::Commander.deliver(
+        endpoint: '/me/take_thread_control',
+        body: body,
+        query: query,
+      )
+    end
+
+    def deliver_pass_thread_control(to:, metadata: nil, target_app_id:)
+      body = { recipient: { id: to }, target_app_id: target_app_id, metadata: metadata }
+      query = { access_token: page_access_token }
+      Bobot::Commander.deliver(
+        endpoint: '/me/pass_thread_control',
+        body: body,
+        query: query,
+      )
+    end
+
     def deliver(payload_template:, to:)
       if payload_template.present?
         if payload_template.key?(:messaging_options) && !payload_template[:messaging_options].nil? && payload_template[:messaging_options].key?(:messaging_type)
@@ -49,11 +69,12 @@ module Bobot
       body = { recipient: { id: to }, messaging_type: "RESPONSE" }.merge(payload_template).merge(payload_template[:messaging_options] || {})
       query = { access_token: page_access_token }
       Bobot::Commander.deliver(
+        endpoint: '/me/messages',
         body: body,
         query: query,
       )
     end
-    
+
     def sender_action(sender_action:, to: nil, messaging_options: nil)
       deliver(payload_template: { sender_action: sender_action, messaging_options: messaging_options }, to: to)
     end

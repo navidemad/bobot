@@ -8,6 +8,8 @@ module Bobot
       some time, check your app's secret token.
     HEREDOC
 
+    OPEN_SSL_AUTHENTICATION_CODE = OpenSSL::Digest.new('sha1'.freeze)
+
     def webhook
       if request.get?
         verify
@@ -44,7 +46,7 @@ module Bobot
     def parsed_body
       @parsed_body ||= ActiveSupport::JSON.decode(body)
     rescue ::ActiveSupport::JSON.parse_error
-      raise BadRequestError.new("Error parsing request body format")
+      raise BadRequestError.new("Error parsing request body format".freeze)
     end
 
     def valid_signature?
@@ -52,7 +54,7 @@ module Bobot
     end
 
     def generate_hmac(content)
-      OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'.freeze), Bobot.config.app_secret, content)
+      OpenSSL::HMAC.hexdigest(self.class::OPEN_SSL_AUTHENTICATION_CODE, Bobot.config.app_secret, content)
     end
 
     def signature_for(string)
@@ -71,18 +73,19 @@ module Bobot
       signature =~ /\Asha1=([0-9a-z]{40})\z/
       hub_signature = Regexp.last_match(1)
       unless hub_signature
-        Rails.logger.error(X_HUB_SIGNATURE_MISSING_WARNING)
+        Rails.logger.error(self.class::X_HUB_SIGNATURE_MISSING_WARNING)
         raise BadRequestError.new("Error getting integrity signature".freeze)
       end
-      unless valid_signature?
-        raise BadRequestError.new("Error checking message integrity".freeze)
-      end
+      raise BadRequestError.new("Error checking message integrity".freeze) unless valid_signature?
     end
 
     def trigger(events)
       events['entry'.freeze].to_a.each do |entry|
         entry['messaging'.freeze].to_a.each do |messaging|
           Bobot::Commander.receive(messaging)
+        end
+        entry['standby'.freeze].to_a.each do |standby|
+          Bobot::Commander.receive(standby) if standby["message".freeze]
         end
       end
     end

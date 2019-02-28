@@ -14,15 +14,20 @@ module Bobot
       message_request
       policy-enforcement
       pass_thread_control
+      take_thread_control
     ].freeze
 
     include Bobot::GraphFacebook
 
     class << self
-      def deliver(body:, query:)
-        graph_post '/me/messages', body: body, query: {
-          access_token: query.fetch(:access_token),
-        }
+      def deliver(endpoint: '/me/messages', body:, query:)
+        graph_post(
+          endpoint,
+          body: body,
+          query: {
+            access_token: query.fetch(:access_token),
+          },
+        )
       end
 
       def on(event, &block)
@@ -35,10 +40,8 @@ module Bobot
 
       def receive(payload)
         event = Bobot::Event.parse(payload)
-        return unless event.page.present?
-
+        event.mark_as_seen if event.page.present? && [Bobot::Event::MessageEcho, Bobot::Event::PassThreadControl, Bobot::Event::TakeThreadControl].none? { |c| event.is_a?(c) }
         hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
-        event.mark_as_seen
         Bobot::CommanderJob.send(
           Bobot.config.async ? :perform_later : :perform_now,
           { payload: payload },
@@ -49,7 +52,7 @@ module Bobot
 
       def trigger(payload)
         event = Bobot::Event.parse(payload)
-        return unless event.page.present?
+        return if !event.page.present?
 
         hook = hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
         hook.call(event)

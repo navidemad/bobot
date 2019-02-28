@@ -9,6 +9,7 @@ require 'bobot/events/account_linking'
 require 'bobot/events/referral'
 require 'bobot/events/policy_enforcement'
 require 'bobot/events/pass_thread_control'
+require 'bobot/events/take_thread_control'
 
 module Bobot
   module Event
@@ -23,6 +24,7 @@ module Bobot
       'message_echo' => MessageEcho,
       'policy-enforcement' => PolicyEnforcement,
       'pass_thread_control' => PassThreadControl,
+      'take_thread_control' => TakeThreadControl,
     }.freeze
 
     def self.parse(payload)
