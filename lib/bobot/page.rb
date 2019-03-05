@@ -525,7 +525,7 @@ module Bobot
             "url": Bobot.config.url_for_chat_extension,
             "webview_height_ratio": Bobot.config.size_for_chat_extension || "tall",
             "webview_share_button": Bobot.config.share_button_for_chat_extension || "show",
-            "in_test": Bobot.config.in_test_for_chat_extension || true,
+            "in_test": !Bobot.config.in_test_for_chat_extension.nil? ? Bobot.config.in_test_for_chat_extension : true,
           }
         },
         query: { access_token: page_access_token },
