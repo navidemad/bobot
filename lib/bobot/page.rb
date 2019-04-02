@@ -1,6 +1,6 @@
 module Bobot
   class Page
-    attr_accessor :slug, :language, :page_id, :page_access_token, :get_started_payload
+    attr_accessor :slug, :language, :page_id, :page_access_token, :get_started_payload, :home_url_for_chat_extension, :size_for_chat_extension, :share_button_for_chat_extension, :in_test_for_chat_extension
 
     def initialize(options = {})
       self.slug = options[:slug]
@@ -8,6 +8,10 @@ module Bobot
       self.page_id = options[:page_id]
       self.page_access_token = options[:page_access_token]
       self.get_started_payload = options[:get_started_payload]
+      self.home_url_for_chat_extension = options[:home_url_for_chat_extension]
+      self.size_for_chat_extension = options[:size_for_chat_extension]
+      self.share_button_for_chat_extension = options[:share_button_for_chat_extension]
+      self.in_test_for_chat_extension = options[:in_test_for_chat_extension]
     end
 
     #####################################
@@ -277,7 +281,7 @@ module Bobot
       rescue => e
         Rails.logger.error(e.message)
       end
-      if Bobot.config.url_for_chat_extension.present?
+      if home_url_for_chat_extension.present?
         begin
           puts "- unset_messenger_extensions_home_url! [....]"
           unset_messenger_extensions_home_url!
@@ -518,15 +522,15 @@ module Bobot
     ## == It controls what is displayed when the Chat Extension is invoked via the composer drawer in Messenger. ==
     def set_messenger_extensions_home_url!
       raise Bobot::FieldFormat.new("access_token is required") unless page_access_token.present?
-      raise Bobot::FieldFormat.new("Bobot.config.url_for_chat_extension is required") unless Bobot.config.url_for_chat_extension.present?
+      raise Bobot::FieldFormat.new("home_url_for_chat_extension is required") unless home_url_for_chat_extension.present?
       Bobot::Profile.set(
         body: { 
           "home_url": {
-            "url": Bobot.config.url_for_chat_extension,
-            "webview_height_ratio": Bobot.config.size_for_chat_extension || "tall",
-            "webview_share_button": Bobot.config.share_button_for_chat_extension || "show",
-            "in_test": !Bobot.config.in_test_for_chat_extension.nil? ? Bobot.config.in_test_for_chat_extension : true,
-          }
+            "url": home_url_for_chat_extension,
+            "webview_height_ratio": size_for_chat_extension || "tall",
+            "webview_share_button": share_button_for_chat_extension || "show",
+            "in_test": !in_test_for_chat_extension.nil? ? in_test_for_chat_extension : true,
+          },
         },
         query: { access_token: page_access_token },
       )

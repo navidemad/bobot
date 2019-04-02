@@ -8,19 +8,19 @@ if bobot_config.present?
     config.domains                         = bobot_config[:domains]
     config.async                           = bobot_config[:async]
     config.commander_queue_name            = bobot_config[:commander_queue_name]
-    config.url_for_chat_extension          = bobot_config[:url_for_chat_extension]
-    config.size_for_chat_extension         = bobot_config[:size_for_chat_extension]
-    config.share_button_for_chat_extension = bobot_config[:share_button_for_chat_extension]
-    config.in_test_for_chat_extension      = bobot_config[:in_test_for_chat_extension]
     bobot_config[:pages].each do |page|
       next if page[:slug].nil? || page[:page_id].nil? || page[:page_access_token].nil? || page[:get_started_payload].nil?
 
       config.pages << Bobot::Page.new(
-        slug:                page[:slug],
-        language:            page[:language],
-        page_id:             page[:page_id],
-        page_access_token:   page[:page_access_token],
-        get_started_payload: page[:get_started_payload],
+        slug:                            page[:slug],
+        language:                        page[:language],
+        page_id:                         page[:page_id],
+        page_access_token:               page[:page_access_token],
+        get_started_payload:             page[:get_started_payload],
+        home_url_for_chat_extension:     page[:home_url_for_chat_extension],
+        size_for_chat_extension:         page[:size_for_chat_extension],
+        share_button_for_chat_extension: page[:share_button_for_chat_extension],
+        in_test_for_chat_extension:      page[:in_test_for_chat_extension],
       )
     end
   end

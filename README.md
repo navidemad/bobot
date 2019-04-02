@@ -24,16 +24,16 @@ gem 'bobot'
         domains: "whitelisted-domain.com,second-whitelisted-domain.com"
         async: false
         commander_queue_name: "default"
-        url_for_chat_extension: "https://whitelisted-domain.com/messenger_extension"
-        size_for_chat_extension: "tall"
-        share_button_for_chat_extension: "show"
-        in_test_for_chat_extension: "true"
         pages: 
           - slug: "facebook_1"
             language: "fr"
             page_id: "789"
             page_access_token: "abc"
             get_started_payload: "get_started"
+            home_url_for_chat_extension: "https://whitelisted-domain.com/messenger_extension"
+            size_for_chat_extension: "tall"
+            share_button_for_chat_extension: "show"
+            in_test_for_chat_extension: "true"
 
     Now to can edit the workflow of your bot with the file:
     - app/bobot/workflow.rb
