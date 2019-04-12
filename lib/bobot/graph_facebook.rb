@@ -15,7 +15,7 @@ module Bobot
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
         )
-        json = (ActiveSupport::JSON.decode(response.send(:body) || '{}') rescue ::JSON::ParserError nil)
+        json = (ActiveSupport::JSON.decode(response.send(:body) || '{}') rescue nil)
         Bobot::ErrorParser.raise_errors_from_html(response, graph_body) if json.nil?
         unless Rails.env.production?
           Rails.logger.debug "[GET] >> #{url}"
@@ -36,7 +36,7 @@ module Bobot
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
         )
-        json = (ActiveSupport::JSON.decode(response.send(:body) || '{}') rescue ::JSON::ParserError nil)
+        json = (ActiveSupport::JSON.decode(response.send(:body) || '{}') rescue nil)
         Bobot::ErrorParser.raise_errors_from_html(response, graph_body) if json.nil?
         unless Rails.env.production?
           Rails.logger.debug "[POST] >> #{url}"
@@ -57,7 +57,7 @@ module Bobot
           headers: GRAPH_HEADERS,
           ssl_verifypeer: false,
         )
-        json = (ActiveSupport::JSON.decode(response.send(:body) || '{}') rescue ::JSON::ParserError nil)
+        json = (ActiveSupport::JSON.decode(response.send(:body) || '{}') rescue nil)
         Bobot::ErrorParser.raise_errors_from_html(response, graph_body) if json.nil?
         unless Rails.env.production?
           Rails.logger.debug "[DELETE] >> #{url}"
