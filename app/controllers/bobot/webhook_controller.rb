@@ -30,11 +30,13 @@ module Bobot
     end
 
     def receive
+      @body = nil
+      @parsed_body = nil
       check_integrity unless skip_check_integrity?
       trigger(parsed_body)
       head :ok
-    rescue BadRequestError => error
-      render plain: error.message, status: :ok
+    rescue => e
+      render plain: e.message, status: :ok
     end
 
   private
