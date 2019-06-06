@@ -38,9 +38,17 @@ module Bobot
         end
       end
 
-      def receive(payload)
+      def receive_message(payload)
+        receive(payload, false)
+      end
+
+      def receive_standby(payload)
+        receive(payload, true)
+      end
+
+      def receive(payload, standby)
         event = Bobot::Event.parse(payload)
-        event.mark_as_seen if event.page.present? && [Bobot::Event::MessageEcho, Bobot::Event::PassThreadControl, Bobot::Event::TakeThreadControl].none? { |c| event.is_a?(c) }
+        event.mark_as_seen if event.page.present? && !standby && [Bobot::Event::MessageEcho, Bobot::Event::PassThreadControl, Bobot::Event::TakeThreadControl].none? { |c| event.is_a?(c) }
         hooks.fetch(Bobot::Event::EVENTS.invert[event.class].to_sym)
         Bobot::CommanderJob.send(
           Bobot.config.async ? :perform_later : :perform_now,

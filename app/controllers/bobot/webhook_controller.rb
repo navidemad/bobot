@@ -84,10 +84,10 @@ module Bobot
     def trigger(events)
       events['entry'.freeze].to_a.each do |entry|
         entry['messaging'.freeze].to_a.each do |messaging|
-          Bobot::Commander.receive(messaging)
+          Bobot::Commander.receive_message(messaging)
         end
         entry['standby'.freeze].to_a.each do |standby|
-          Bobot::Commander.receive(standby) if standby["message".freeze]
+          Bobot::Commander.receive_standby(standby) if standby["message".freeze]
         end
       end
     end
